@@ -1,0 +1,42 @@
+<template>
+    <div id="main">
+       
+        <ul>
+        <li v-for="button in buttons">
+            <login 
+                :buttonvalue="button.buttonvalue"
+                :modal=" button.modal "
+                :title=" button.title "
+                :okinfo=" button.okinfo "
+                :cancelinfo=" button.cancelinfo "
+            ></login>{{ button.buttonvalue }}
+        </li>
+        </ul>
+    </div>
+</template>
+<script>
+    let login = require("home:widget/login/login.vjs");
+    export default {
+        data: {
+            buttons:[
+                {
+                    buttonvalue: "xiaodu登录", 
+                    modal: false,
+                    title: "xiaodu登录窗口",
+                    okinfo: "确认登录xiaodu",
+                    cancelinfo: "取消登录xiaodu"
+                },
+                {
+                    buttonvalue: "icode登录", 
+                    modal: true,
+                    title: "icode登录窗口",
+                    okinfo: "确认登录icode",
+                    cancelinfo: "取消登录icode"
+                },
+            ]
+        },
+        components: { 
+            login: login.default
+        }
+    }
+</script>

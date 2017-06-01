@@ -1,0 +1,8 @@
+   let home = require('home:widget/home/home.vjs');
+   let about = require('home:widget/about/about.vjs');
+
+    const routers = [
+      { path: '/', component: home },
+      { path: '/about', component: about }
+    ]
+

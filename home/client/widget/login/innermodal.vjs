@@ -1,0 +1,62 @@
+<template>
+        <div class="ivu-modal-content">
+            <div class="ivu-modal-header">
+                <div class="ivu-modal-header-inner">{{ title }}</div>
+            </div>
+            <div class="ivu-modal-body">
+               <div v-if="!status">
+                   <Alert v-if='error' type="error"  show-icon>{{ error }}</Alert>
+                   <i-input v-on:on-blur="usernameblur(username)" type='text' v-model="username" placeholder="请输入用户名..."></i-input> 
+                   <i-input type='password' v-model="password" placeholder="请输入密码..."></i-input> 
+                   <i-button type="success" @click="submit" long>{{ success }}</i-button>
+               </div>
+               <div v-else>
+                    <div class='ivu-input-wrapper'>
+                        用户名: {{ username }}  密码: {{ password.replace(/./g,'*') }}
+                    </div>
+                   <i-button type="ghost" @click="edit">重置登录帐号</i-button>
+               </div>
+            </div>
+        </div>
+</template>
+<script>
+    export default {
+        data() {
+            return{
+                username: '',
+                password: '',
+                success: '',
+                title:'',
+                status: false,
+                error: '' 
+            }
+        },
+        props: ['username', 'password', 'title', 'success', 'status'],
+        methods:{
+            usernameblur(username){
+                console.log(username)
+            },
+            submit(){
+                if(this.username && this.password){
+                    this.error = null 
+                    this.status = true
+                    return;
+                }
+                if(!this.username){
+                    this.error = '用户名不可以为空'
+                    return;
+                }
+                if(!this.password){
+                    this.error = '密码不可以为空'
+                    return;
+                }
+            },
+            edit(){
+                this.status = false
+            }
+        }
+     
+
+    }
+</script>
+

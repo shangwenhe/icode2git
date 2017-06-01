@@ -1,0 +1,51 @@
+<template>
+    <div class='login'>
+        <i-button type='primary' @click="modal=true" v-text="buttonvalue"></i-button>
+        <Modal
+            v-model="modal"
+            :title="title"
+            @on-ok="ok"
+            @on-cancel="cancel">
+            <p>对话框内容</p>
+            <p>对话框内容</p>
+            <p>对话框内容</p>
+        </Modal>
+        <i-button type='primary' @click="showModal" v-text="buttonvalue"></i-button>
+    </div>
+</template>
+<style>
+.login{
+    margin: 5px;
+}
+</style>
+<script>
+    
+    let iView = require("home:static/lib/ivue/iview.min.js");
+    export default {
+        data :{
+            modal: false,
+            buttonvalue: ''
+        },
+        props: ['buttonvalue', 'modal', 'title', 'okinfo', 'cancelinfo'],
+        methods: {
+            ok () {
+                this.$Message.info(this.okinfo);
+            },
+            cancel () {
+                this.$Message.info(this.cancelinfo);
+            },
+            showModal(){
+                this.$Modal.confirm({
+                    title: '确认对话框标题',
+                    content: '<p>一些对话框内容</p><p>一些对话框内容</p>',
+                    onOk: () => {
+                        this.$Message.info('点击了确定');
+                    },
+                    onCancel: () => {
+                        this.$Message.info('点击了取消');
+                    }
+                });  
+            }
+        }
+    }
+</script>

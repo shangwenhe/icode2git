@@ -1,12 +1,16 @@
 {
   "name": "home",
   "version": "1.0.0",
-  "description": "",
-  "dependencies": {},
+  "description": "icode代码迁移",
+  "dependencies": {
+    "iview": "^2.0.0-rc.14"
+  },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "yog2 release --fis3 -wc",
+    "debug": "yog2 release debug --fis3 -wc"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "shangwenhe,shangwenhe@itv.baidu.com",
+  "license": "ISC",
+  "main": ""
 }

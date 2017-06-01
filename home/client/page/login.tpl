@@ -17,7 +17,7 @@
     {% body %}
     <div id='Mindex'></div>
     {% script %}
-    require.async(["vue","home:static/lib/vue/vue-router.min.js", "home:widget/main/main.vjs"],
+    require.async(["vue","home:static/lib/vue/vue-router.min.js", "home:widget/login/modal.vjs"],
     function(Vue, routers, main){
 
         main.default.el= "#Mindex";

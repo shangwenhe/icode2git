@@ -1,0 +1,17 @@
+{
+  "name": "icode2git",
+  "version": "1.0.0",
+  "description": "将百度的icode代码迁移到git.xiaodutv.com",
+  "main": "index.js",
+  "scripts": {
+    "base": "cd ./base && npm run start",
+    "home": "cd ./home && npm run start",
+    "dev": " npm run base &&  cd - &&  npm run home"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://git.xiaodutv.com/migrate/icode2git.git"
+  },
+  "author": "shangwenhe@itv.baidu.com",
+  "license": "ISC"
+}

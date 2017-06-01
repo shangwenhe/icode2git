@@ -1,0 +1,48 @@
+<template>
+    <div class='login-page'>
+        <h2><Icon type="home" size='25'></Icon> 校验用户</h2>
+        <innermodal v-for="modal in modals"
+            :username="modal.username"
+            :password="modal.password"
+            :title="modal.title"
+            :success="modal.success"
+            :status="modal.status"
+            ></innermodal>
+    </div>
+</template>
+<style lang='less'>
+.login-page{
+    margin: 20px;
+    .ivu-modal-body{
+        .ivu-input-wrapper{
+            margin: 3px 0 10px;
+        }
+    }
+}
+</style>
+<script>
+    import innermodal from './innermodal.vjs';
+    export default {
+        data: {
+           modals:[
+                {
+                    username: 'shangwenhe',
+                    password: 'sh',
+                    title: 'xiaodu登录检验',
+                    success: '登录xiaodut',
+                    status: true
+                },
+                {
+                    username: '',
+                    password: '',
+                    title: 'icode登录检验',
+                    success: '登录icode'
+                }
+           ]
+        },
+        methods: {
+        },
+        components:{ innermodal }
+    }
+</script>
+

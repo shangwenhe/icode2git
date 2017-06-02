@@ -1,0 +1,36 @@
+<template>
+    <div class='repertory'>
+        <addrepertory v-on:addrep=getaddrepertory>
+        </addrepertory>
+        <repertorylist :data=list>
+        </repertorylist>
+    </div>
+</template>
+<style lang=less>
+.repertory{
+    margin: 20px;
+    h2{
+        margin-top: 20px;
+    }
+}
+</style>
+<script>
+    import addrepertory from './addrepertory.vjs';
+    import repertorylist from './repertorylist.vjs';
+    export default{
+        components: { 
+            addrepertory, repertorylist
+        },
+        data(){
+            return {
+               list:[
+               ] 
+            }
+        },
+        methods:{
+            getaddrepertory(data){
+                this.list.unshift(data)
+            }
+        }
+    }
+</script>

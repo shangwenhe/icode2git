@@ -1,13 +1,16 @@
 <template>
     <div class='login-page'>
         <h2><Icon type="home" size='25'></Icon> 校验用户</h2>
-        <innermodal v-for="modal in modals"
+        <div class='modals'>
+        <innermodal v-for="(modal, index) in modals"
             :username="modal.username"
             :password="modal.password"
             :title="modal.title"
             :success="modal.success"
             :status="modal.status"
+            :indexkey="index"
             ></innermodal>
+        </div>
     </div>
 </template>
 <style lang='less'>
@@ -19,28 +22,42 @@
         }
     }
 }
+@media (min-width: 600px) {
+    .modals {
+        display: flex;
+        .ivu-modal-content{
+            width: 100%;
+        }
+    }
+}
 </style>
 <script>
     import innermodal from './innermodal.vjs';
+    import axios  from '../../static/lib/ajax/axios.js';
     export default {
         data: {
            modals:[
-                {
-                    username: 'shangwenhe',
-                    password: 'sh',
-                    title: 'xiaodu登录检验',
-                    success: '登录xiaodut',
-                    status: true
-                },
-                {
-                    username: '',
-                    password: '',
-                    title: 'icode登录检验',
-                    success: '登录icode'
-                }
+                 {
+                     title: 'xiaodu登录检验',
+                     username: '',
+                     password: '',
+                     success: '登录xiaodu',
+                 },
+                 {
+                     title: 'icode登录检验',
+                     username: '',
+                     password: '',
+                     success: '登录icode',
+                 }
            ]
         },
-        methods: {
+        mounted(){
+            let author = window.localStorage.getItem('author')
+            if(author && author.length>0){
+                this.modals = JSON.parse(author);
+            }else{
+                window.localStorage.setItem('author', JSON.stringify(this.modals));
+            }
         },
         components:{ innermodal }
     }

@@ -1,0 +1,72 @@
+<template>
+    <div class='addrepertory'>
+        <h2><Icon type="lock-combination"></Icon> 添加仓库</h2>
+        <Alert type='error' show-icon v-show="error">
+            请按要求输入...
+            <template slot="desc">{{ error }}</template>
+        </Alert>
+        <h5><Icon type="ios-navigate-outline"></Icon> 选择站点</h5>
+        <i-select v-model="site">
+            <i-option v-for="item in sites" :value="item.value" :key="item">{{ item.label }}{{item.value}}</i-option>
+        </i-select>
+        <h5><Icon type="social-github"></Icon> 输入仓库路径</h5>
+        <i-input v-model="path" placeholder="http://git.xiaodutv.com/namespace/repertory.git" ></i-input>
+        <p class='add-submit'>
+        <i-button type="success" @click="addsubmit" long>确认提交</i-button>
+        </p>
+
+    </div>
+</template>
+<style lang=less>
+.addrepertory{
+    .ivu-alert-error{
+        margin-top: 15px;
+    }
+    h5{
+        margin: 15px 0 5px;
+    }
+    .add-submit{
+        margin-top: 15px;
+    }
+}
+</style>
+<script>
+    export default{
+        data(){
+            return {
+                sites: [
+                    {
+                        value: 'icode',
+                        label: '百度代码平台'
+                    },
+                    {
+                        value: 'git.xiaodutv',
+                        label: '小度互娱代码平台'
+                    }
+                ],
+                site: '',
+                path: '',
+                error: null
+            }
+        },
+        methods:{
+            addsubmit(){
+                if(!this.site){
+                    this.error = '请选择所属站点';
+                    return;
+                }
+                if(!/^https?:\/\/(.*\/){2}.*$/.test(this.path)){
+                    this.error = '请填写真实的仓库地址';
+                    return;
+                }
+                this.error = null;
+                this.$emit('addrep',{
+                    site: this.site ,
+                    path: this.path 
+                });
+                this.site = '';
+                this.path = '';
+            }
+        }
+    }
+</script>

@@ -4,22 +4,23 @@
                 <div class="ivu-modal-header-inner">{{ title }}</div>
             </div>
             <div class="ivu-modal-body">
-               <div v-if="!status">
+               <template v-if="!status">
                    <Alert v-if='error' type="error"  show-icon>{{ error }}</Alert>
                    <i-input v-on:on-blur="usernameblur(username)" type='text' v-model="username" placeholder="请输入用户名..."></i-input> 
                    <i-input type='password' v-model="password" placeholder="请输入密码..."></i-input> 
                    <i-button type="success" @click="submit" long>{{ success }}</i-button>
-               </div>
-               <div v-else>
+               </template>
+               <template v-else>
                     <div class='ivu-input-wrapper'>
                         用户名: {{ username }}  密码: {{ password.replace(/./g,'*') }}
                     </div>
                    <i-button type="ghost" @click="edit">重置登录帐号</i-button>
-               </div>
+               </template>
             </div>
         </div>
 </template>
 <script>
+    import axios  from '../../static/lib/ajax/axios.js';
     export default {
         data() {
             return{
@@ -31,15 +32,28 @@
                 error: '' 
             }
         },
-        props: ['username', 'password', 'title', 'success', 'status'],
+        props: ['username', 'password', 'title', 'success', 'status', 'indexkey'],
         methods:{
             usernameblur(username){
                 console.log(username)
+            },
+            addUserinfo(){
+                let author = JSON.parse(window.localStorage.getItem('author') || '[]');
+                author[this.indexkey] = {
+                     title: this.title,
+                     username: this.username,
+                     password: this.password,
+                     success: this.success,
+                     indexkey: this.indexkey,
+                     status: this.status 
+                }
+                window.localStorage.setItem('author', JSON.stringify(author));
             },
             submit(){
                 if(this.username && this.password){
                     this.error = null 
                     this.status = true
+                    this.addUserinfo();
                     return;
                 }
                 if(!this.username){

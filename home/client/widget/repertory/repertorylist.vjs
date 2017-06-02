@@ -1,0 +1,72 @@
+<template>
+    <div class='repertorylist'>
+        <h2><Icon type="ios-folder"></Icon> 仓库目录</h2>
+        <i-table :columns="columns" :data="data"></i-table>
+        <Page v-show='data.length>0' :total="data.length" show-sizer @on-change="pagechange" @on-page-size-change='pagesizechange'></Page>
+    </div>
+</template>
+<style lang=less>
+.repertorylist{
+    .ivu-table-wrapper{
+        margin-top: 5px;
+    }
+    .ivu-page{
+        margin-top: 10px;
+    }
+}
+</style>
+<script>
+    export default{
+        data(){
+            return {
+                columns:[
+                    {
+                        type: 'index',
+                        title: '序号',
+                        width: 80
+                    },
+                    {
+                        title: '所属站点',
+                        key: 'site',
+                        width: 180
+                    },
+                    {
+                        title: '仓库地址',
+                        key: 'path'
+                    },
+                    {
+                        title: '操作',
+                        key: 'action',
+                        width: 80,
+                        render: (h, params)=>{
+                          return h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.remove(params.index)
+                                        }
+                                    }
+                                }, '删除')
+                        
+                        }
+                    }
+                ],
+                data:[
+                ]
+            }
+        },
+        props: [ 'data' ],
+        methods:{
+            remove(index){console.log(index)},
+            pagechange(page){
+                console.log(page)
+            },
+            pagesizechange(size){
+                console.log(size)
+            }
+        }
+    }
+</script>

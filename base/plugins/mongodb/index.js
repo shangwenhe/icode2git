@@ -34,24 +34,6 @@ db.config = function (config, db) {
     });
 };
 
-/**
- * 自增id
- */
-var modelId = mongoose.model('ID', {_id: String, len : Number});
-db.increaseId = function (collection, callback) {
-    return modelId.findByIdAndUpdateAsync(
-        collection,
-        {$inc: {len: 1}},
-        {new: true, upsert: true}
-    ).error(function (err) {
-        if (err) {
-            yog.log.fatal('fetch `%s` id error', collection);
-        }
-    }).then(function (docs) {
-        return docs.len;
-    });
-}
-
 module.exports.mongodb = function(app, confs){
     if (!_.isArray(confs)){
         confs = [confs];

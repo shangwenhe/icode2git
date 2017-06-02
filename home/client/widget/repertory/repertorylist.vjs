@@ -16,6 +16,7 @@
 }
 </style>
 <script>
+    import axios  from '../../static/lib/ajax/axios.js';
     export default{
         data(){
             return {
@@ -60,7 +61,19 @@
         },
         props: [ 'data' ],
         methods:{
-            remove(index){console.log(index)},
+            remove(index){
+                console.log(index)
+                let _id = this.data[index]['_id'];
+
+                // 删除数据
+                axios.delete('/api/repertory/'+  _id).then( (response) => {
+                    console.log(response.data.data);
+                    this.$emit('addrep', response.data.data);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+
+            },
             pagechange(page){
                 console.log(page)
             },

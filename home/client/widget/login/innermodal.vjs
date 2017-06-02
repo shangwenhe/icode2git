@@ -20,7 +20,6 @@
         </div>
 </template>
 <script>
-    import axios  from '../../static/lib/ajax/axios.js';
     export default {
         data() {
             return{

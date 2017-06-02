@@ -8,20 +8,27 @@
 
 
 import repertory from './schema/repertory';
+import async from 'async';
 
-class Repertory{
+class Repertory {
 
-    add(param, callback){
-        callback(null ,param);
+    add(param, callback) {
+        async.waterfall([
+            function(callback) {
+                let Rep = new repertory(Object.assign({
+                }, param));
+                Rep.save(callback);
+            }
+        ], callback)
     }
-    remove(param, callback){
-        callback(null ,param);
+    remove(param, callback) {
+        repertory.remove(param, callback)
     }
-    list(param, callback){
-        
-        callback(null ,param);
+    list(param, callback) {
+        repertory.find({}, callback)
     }
 }
 
-export default new Repertory;
+export
+default new Repertory;
 /* eslint-enable */

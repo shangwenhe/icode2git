@@ -33,7 +33,6 @@
 </style>
 <script>
     import innermodal from './innermodal.vjs';
-    import axios  from '../../static/lib/ajax/axios.js';
     export default {
         data: {
            modals:[

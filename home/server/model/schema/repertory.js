@@ -24,9 +24,14 @@ let repertorySchema = new Schema({
         default: Date.now
     },
     mark: String,
-    author_id: String
+    username: String
 });
 
-let repertory = mongoose.model('Repertory', repertorySchema);
-export default { repertory };
+try{
+    var repertory = mongoose.model('Repertory', repertorySchema);
+}catch(e){
+    var repertory = mongoose.model('Repertory');
+}
+
+export default repertory;
 /* eslint-enable */

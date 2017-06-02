@@ -1,6 +1,7 @@
 <template>
     <div class='repertory'>
-        <addrepertory v-on:addrep=getaddrepertory>
+        <addrepertory v-on:addrep=getaddrepertory
+        :username="username">
         </addrepertory>
         <repertorylist :data=list>
         </repertorylist>
@@ -17,6 +18,8 @@
 <script>
     import addrepertory from './addrepertory.vjs';
     import repertorylist from './repertorylist.vjs';
+    import axios  from '../../static/lib/ajax/axios.js';
+
     export default{
         components: { 
             addrepertory, repertorylist
@@ -24,13 +27,38 @@
         data(){
             return {
                list:[
-               ] 
+               ],
+               username: ''
             }
         },
         methods:{
             getaddrepertory(data){
                 this.list.unshift(data)
             }
+        },
+        created(){
+            // 如果没有设置username则让其跳到登录页面
+            let author = window.localStorage.getItem('author');
+            if(!author){
+                window.location.href = '/login';
+            }
+            try{
+                author = JSON.parse(author);
+                if(!author[0]['username']){
+                    throw('username empty') 
+                }
+                this.username =  author[0]['username'];
+            }catch(e){
+                window.location.href = '/login';
+            }
+        },
+        mounted(){
+            axios.get('/api/repertory')
+            .then((response)=>{
+                this.list = response.data.data;
+            }).catch(function (error) {
+                console.log(error);
+            });
         }
     }
 </script>

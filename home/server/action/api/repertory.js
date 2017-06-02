@@ -12,7 +12,7 @@ function post(req, res) {
     repertory.add(req.body, (err, data) => {
         res.json({
             msg: 'post',
-            data: req.body
+            data: data
         });
     })
 }
@@ -26,8 +26,19 @@ function get(req, res) {
     });
 }
 
+function deleteById(req, res) {
+    
+    repertory.remove(req.params, (err, data) => {
+        res.json({
+            msg: 'delete',
+            data: data
+        });
+    });
+}
+
 export default {
     post,
-    get
+    get,
+    delete: deleteById
 };
 /* eslint-enable */

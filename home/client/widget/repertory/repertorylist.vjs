@@ -29,11 +29,21 @@
                     {
                         title: '所属站点',
                         key: 'site',
-                        width: 180
+                        width: 100
+                    },
+                    {
+                        title: '迁移状态',
+                        key: 'migrate',
+                        width: 100
                     },
                     {
                         title: '仓库地址',
                         key: 'path'
+                    },
+                    {
+                        title: '创建者',
+                        width: 110,
+                        key: 'username'
                     },
                     {
                         title: '操作',

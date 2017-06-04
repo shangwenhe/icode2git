@@ -33,7 +33,7 @@
         },
         methods:{
             getaddrepertory(data){
-                this.list.unshift(data)
+                this.list.push(data)
             }
         },
         created(){

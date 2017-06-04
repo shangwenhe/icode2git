@@ -57,7 +57,7 @@
                     this.error = '请选择所属站点';
                     return;
                 }
-                if(!/^https?:\/\/(.*\/){2}.*$/.test(this.path)){
+                if(!/^(http|ssh)s?:\/\/(.*\/){2}.*$/.test(this.path)){
                     this.error = '请填写真实的仓库地址';
                     return;
                 }

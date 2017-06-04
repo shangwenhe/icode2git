@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "icode代码迁移",
   "dependencies": {
-    "iview": "^2.0.0-rc.14"
+    "iview": "^2.0.0-rc.14",
+    "vue-router": "^2.5.3"
   },
   "devDependencies": {},
   "scripts": {

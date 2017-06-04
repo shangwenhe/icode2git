@@ -2,15 +2,17 @@
     <div class='login-page'>
         <h2><Icon type="home" size='25'></Icon> 校验用户</h2>
         <div class='modals'>
-        <innermodal v-for="(modal, index) in modals"
-            :username="modal.username"
-            :password="modal.password"
-            :title="modal.title"
-            :success="modal.success"
-            :status="modal.status"
-            :indexkey="index"
-            ></innermodal>
+            <innermodal v-for="(modal, index) in modals"
+                :username="modal.username"
+                :password="modal.password"
+                :title="modal.title"
+                :success="modal.success"
+                :status="modal.status"
+                :indexkey="index"
+                ></innermodal>
         </div>
+        <i-button type="ghost" long @click='gorepertory'>添加仓库列表 go! go! </i-button>
+
     </div>
 </template>
 <style lang='less'>
@@ -50,7 +52,12 @@
                  }
            ]
         },
-        mounted(){
+        methods:{
+            gorepertory(){
+                window.location.hash = '#/repertory';
+            }
+        },
+        beforeCreate(){
             let author = window.localStorage.getItem('author')
             if(author && author.length>0){
                 this.modals = JSON.parse(author);

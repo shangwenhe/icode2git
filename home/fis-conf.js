@@ -25,6 +25,10 @@ fis.match('client/**.vjs:js', {
 fis.match('lib/**.js', {
     isMod: true,
 });
+fis.match('client/router.js', {
+    parser: fis.plugin('typescript'),
+    isMod: true,
+});
 fis.match('vue.min.js', {
     isMod: true,
     // id: 'vue',

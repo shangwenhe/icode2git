@@ -23,6 +23,5 @@ module.exports = function(router){
     //     // DELETE /home/book/1
     //     .delete(router.action('book').delete);
 
-    console.log(router.action('/api/repertory'));
     router.delete('/api/repertory/:_id', router.action('api/repertory'));
 };

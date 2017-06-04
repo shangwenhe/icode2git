@@ -27,7 +27,6 @@ function get(req, res) {
 }
 
 function deleteById(req, res) {
-    
     repertory.remove(req.params, (err, data) => {
         res.json({
             msg: 'delete',

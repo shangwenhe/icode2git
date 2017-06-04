@@ -1,23 +1,21 @@
 /**
- * @file: repertory.js
+ * @file: migrate.js
  * @author: shangwenhe@itv.baidu.com
- * @date: 2017-06-02
+ * @date: 2017-06-03
  * @description: this is a <js> file
  */
 /* eslint-disable */
-
-
-import repertory from './schema/repertory';
+import migrate from './schema/migrate';
 import async from 'async';
 
-class Repertory {
+class Migrate {
     /**
-     *  @desc 添加仓库地址
+     *  @desc 添加迁移地址
      * */
     add(param, callback) {
         async.waterfall([
             function(callback) {
-                let Rep = new repertory(Object.assign({
+                let Rep = new migrate(Object.assign({
                 }, param));
                 Rep.save(callback);
             }
@@ -25,15 +23,16 @@ class Repertory {
     }
 
     /**
-     * @desc 查询仓库列表
+     * @desc 查询迁移列表
      */
     list(query, callback) {
-        repertory.find(query, callback)
+        migrate.find(query, callback)
     }
     remove(param, callback) {
-        repertory.remove(param, callback)
+        migrate.remove(param, callback)
     }
 }
 
-export default new Repertory;
+export default new Migrate;
+/* eslint-enable */
 /* eslint-enable */

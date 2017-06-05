@@ -1,0 +1,83 @@
+<template>
+    <div class='migrate'> 
+    <h2><Icon type="code-working"></Icon> {{ title }}</h2>
+    <Row>
+        <i-col span="11"><selecte-repertory
+            :sites="sites"
+            :paths="paths"
+            :allpaths="paths"
+            ></selecte-repertory></i-col>
+        <i-col span="2">
+        <Icon type="arrow-right-a"></Icon>
+        <Icon type="network"></Icon> 
+        </i-col>
+        <i-col span="11"><selecte-repertory
+            :sites="sites"
+            :paths="paths"
+            :allpaths="paths"
+            ></selecte-repertory></i-col>
+    </Row>
+    <i-button type="success" long>确认提交</i-button>
+    </div>
+</template>
+<style lang='less'>
+.migrate{
+    margin: 20px;
+    .ivu-col-span-2{
+        text-align:center;
+        font-size: 23px;
+        padding-top: 30px;
+    }
+    .ivu-btn-success{
+        margin: 10px auto 0;
+        width: 50%;
+        display: block;
+    }
+}
+
+@media (max-width: 800px) {
+.migrate{
+    .ivu-col-span-11,
+    .ivu-col-span-2{
+        float: none;
+        width: 100%;
+    }
+    .ivu-col-span-2{
+        padding-top: 0px;
+    }
+}
+}
+</style>
+<script>
+    import axios  from '../../static/lib/ajax/axios.js';
+    import selecteRepertory from './selecteRepertory.vjs'
+
+    export default {
+        data(){
+            return{
+                title: '选择迁移',
+                sites: [ ],
+                paths:[ ],
+
+            }
+        },
+        components:{
+            selecteRepertory, 
+        },
+        beforeCreate(){
+            
+             axios.get('/api/sites').then( (response) => {
+                 this.sites = response.data.data;
+             }).catch( (error) => {
+                console.log(error)
+             });
+
+            axios.get('/api/repertory') .then((response)=>{
+                this.paths = response.data.data;
+                console.log(this.paths)
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    }
+</script>

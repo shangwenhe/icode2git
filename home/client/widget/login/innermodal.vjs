@@ -24,6 +24,7 @@
         data() {
             return{
                 username: '',
+                name: '',
                 password: '',
                 success: '',
                 title:'',
@@ -31,14 +32,14 @@
                 error: '' 
             }
         },
-        props: ['username', 'password', 'title', 'success', 'status', 'indexkey'],
+        props: ['username', 'name', 'password', 'title', 'success', 'status', 'indexkey'],
         methods:{
             usernameblur(username){
                 console.log(username)
             },
             addUserinfo(){
-                let author = JSON.parse(window.localStorage.getItem('author') || '[]');
-                author[this.indexkey] = {
+                let author = JSON.parse(window.localStorage.getItem('author') || '{}');
+                author[this.name] = {
                      title: this.title,
                      username: this.username,
                      password: this.password,
@@ -68,8 +69,6 @@
                 this.status = false
             }
         }
-     
-
     }
 </script>
 

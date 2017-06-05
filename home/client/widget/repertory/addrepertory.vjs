@@ -7,7 +7,7 @@
         </Alert>
         <h5><Icon type="ios-navigate-outline"></Icon> 选择站点</h5>
         <i-select v-model="site">
-            <i-option v-for="item in sites" :value="item.value" :key="item">{{ item.label }}{{item.value}}</i-option>
+            <i-option v-for="item in sites" :value="item.name" :key="item">{{ item.name }}: {{item.path}} {{item.describe}}</i-option>
         </i-select>
         <h5><Icon type="social-github"></Icon> 输入仓库路径</h5>
         <i-input v-model="path" placeholder="http://git.xiaodutv.com/namespace/repertory.git" ></i-input>
@@ -51,6 +51,13 @@
             }
         },
         props: ['username'],
+        beforeCreate(){
+             axios.get('/api/sites').then( (response) => {
+                 this.sites= response.data.data;
+             }).catch( (error) => {
+                console.log(error)
+             });
+        },
         methods:{
             addsubmit(){
                 if(!this.site){

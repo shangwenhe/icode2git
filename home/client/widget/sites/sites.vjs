@@ -1,0 +1,74 @@
+<template>
+    <div class='tmpl-sites'>
+        <h2><Icon type="lock-combination"></Icon> 添加站点</h2>
+        <Alert type='error' show-icon v-show="error">
+            请按要求输入...
+            <template slot="desc">{{ error }}</template>
+        </Alert>
+        <h5><Icon type="locked"></Icon> 站点名字</h5>
+        <i-input v-model="name" placeholder="请输入..."></i-input>
+        <h5><Icon type="shuffle"></Icon> 站点别名</h5>
+        <i-input v-model="alias" placeholder="请输入..."></i-input>
+        <h5><Icon type="link"></Icon> 站点地址</h5>
+        <i-input v-model="path" placeholder="请输入..."></i-input>
+        <h5><Icon type="chatboxes"></Icon> 站点描述</h5>
+        <i-input v-model="describe" placeholder="请输入..."></i-input>
+        <i-button @click="submit" type="success" long>确认提交</i-button>
+        <list :site="site" ></list>
+    </div>
+    
+</template>
+<style lang='less'>
+.tmpl-sites{
+    margin: 20px;
+    h5{
+        margin: 15px 0 5px;
+    }
+    .ivu-btn-success{
+        margin-top: 15px;
+    }
+}
+</style>
+<script>
+    import list from './list.vjs';
+    import axios  from '../../static/lib/ajax/axios.js';
+
+    export default{
+        data(){
+            return{
+                name: '', 
+                alias: '', 
+                path: '', 
+                describe: '', 
+                site: '',
+                error: false
+            }
+        },
+        methods:{
+
+            submit(){
+                if(!this.name){
+                    this.error = '用户名不可以为空';
+                    return; 
+                }
+                if(!this.alias){
+                    this.alias = this.name;
+                }
+                if(!this.path){
+                    this.error = '站点路径不可以为空';
+                    return; 
+                }
+                let {name, alias, path, describe} = this;
+                 axios.post('/api/sites',{
+                     name, alias, path, describe 
+                 }).then( (response) => {
+                     this.site= response.data.data; 
+                 }).catch( (error) => {
+                    console.log(error)
+                 });
+            } 
+        },
+        components: { list }
+    }
+</script>
+

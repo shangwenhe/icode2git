@@ -1,0 +1,65 @@
+<template>
+    <div class='migrate-repertory'>
+        <Row>
+            <i-col span="4"><Icon type="link"></Icon> 站点: &nbsp; </i-col>
+            <i-col span="20">
+                <i-select v-model="site">
+                    <i-option v-for="item in sites" 
+                        :value="item.name" 
+                        :key="item">{{ item.name }}: {{item.path}} {{item.describe}}</i-option>
+                </i-select>
+            </i-col>
+        </Row>
+        <Row>
+            <i-col span="4"><Icon type="fork-repo"></Icon> 仓库地址: &nbsp; </i-col>
+            <i-col span="20">
+                <i-select v-model="path">
+                    <i-option v-for="item in paths" 
+                        :value="item._id" 
+                        :key="item">{{ item.path }}</i-option>
+                </i-select>
+            </i-col>
+        </Row>
+    </div>
+</template>
+<style lang='less'>
+.migrate-repertory{
+    .ivu-col-span-4{
+        line-height: 32px;
+        text-align: right;
+    }
+    .ivu-row{
+        margin: 10px 0;
+    }
+}
+</style>
+<script>
+
+    export default{
+        data(){
+            return {
+                sites: [
+                ],
+                site:'',
+
+                paths:[
+                ],
+                path:'',
+                allpaths:[]
+            }
+        },
+        props: ['sites', 'paths', 'allpaths'],
+        watch:{
+            site(nval, oval){
+                console.log(nval, oval); 
+                this.paths = this.allpaths.filter(function(item, key){
+                    console.log(item,key)
+                    if(item.site === nval){
+                        return true;
+                    }
+                    return false;
+                })
+            }
+        }
+    }
+</script>

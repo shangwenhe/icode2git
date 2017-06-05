@@ -1,51 +1,74 @@
 <template>
-    <div class='login'>
-        <i-button type='primary' @click="modal=true" v-text="buttonvalue"></i-button>
-        <Modal
-            v-model="modal"
-            :title="title"
-            @on-ok="ok"
-            @on-cancel="cancel">
-            <p>对话框内容</p>
-            <p>对话框内容</p>
-            <p>对话框内容</p>
-        </Modal>
-        <i-button type='primary' @click="showModal" v-text="buttonvalue"></i-button>
+    <div class='login-page'>
+        <h2><Icon type="home" size='25'></Icon> 校验用户</h2>
+        <div class='modals'>
+            <innermodal v-for="(modal, index) in modals"
+                :username="modal.username"
+                :name="modal.name"
+                :password="modal.password"
+                :title="modal.title"
+                :success="modal.success"
+                :status="modal.status"
+                :indexkey="index"
+                ></innermodal>
+        </div>
+        <i-button type="ghost" long @click='gorepertory'>添加仓库列表 go! go! </i-button>
+
     </div>
 </template>
-<style>
-.login{
-    margin: 5px;
+<style lang='less'>
+.login-page{
+    margin: 20px;
+    .ivu-modal-body{
+        .ivu-input-wrapper{
+            margin: 3px 0 10px;
+        }
+    }
+}
+@media (min-width: 600px) {
+    .modals {
+        display: flex;
+        .ivu-modal-content{
+            width: 100%;
+        }
+    }
 }
 </style>
 <script>
-    
-    let iView = require("home:static/lib/ivue/iview.min.js");
+    import axios  from '../../static/lib/ajax/axios.js';
+    import innermodal from './innermodal.vjs';
     export default {
-        data :{
-            modal: false,
-            buttonvalue: ''
-        },
-        props: ['buttonvalue', 'modal', 'title', 'okinfo', 'cancelinfo'],
-        methods: {
-            ok () {
-                this.$Message.info(this.okinfo);
-            },
-            cancel () {
-                this.$Message.info(this.cancelinfo);
-            },
-            showModal(){
-                this.$Modal.confirm({
-                    title: '确认对话框标题',
-                    content: '<p>一些对话框内容</p><p>一些对话框内容</p>',
-                    onOk: () => {
-                        this.$Message.info('点击了确定');
-                    },
-                    onCancel: () => {
-                        this.$Message.info('点击了取消');
-                    }
-                });  
+        data() {
+           return {
+               modals:{}
             }
-        }
+        },
+        methods:{
+            gorepertory(){
+                window.location.hash = '#/repertory';
+            }
+        },
+        beforeCreate(){
+             let author = JSON.parse(window.localStorage.getItem('author')) || this.modals;
+             axios.get('/api/sites').then( (response) => {
+                  let list = [];
+                  response.data.data.forEach(function(value, index){
+                        list.push(
+                          Object.assign({
+                             title: value.name + '登录检验',
+                             username: '',
+                             password: '',
+                             success: '登录' + value.name,
+                          }, value, author && author[value.name]  )
+                        ) 
+                  });
+                  this.modals = list;
+             }).catch( (error) => {
+                console.log(error)
+             });
+        
+        },
+        components:{ innermodal }
     }
 </script>
+

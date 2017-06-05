@@ -40,16 +40,16 @@
             // 如果没有设置username则让其跳到登录页面
             let author = window.localStorage.getItem('author');
             if(!author){
-                window.location.href = '/login';
+                window.location.hash= '#/login';
             }
             try{
                 author = JSON.parse(author);
-                if(!author[0]['username']){
+                if(!author['xiaodu']['username']){
                     throw('username empty') 
                 }
-                this.username =  author[0]['username'];
+                this.username = author['xiaodu']['username'];
             }catch(e){
-                window.location.href = '/login';
+                window.location.href = '#/login';
             }
         },
         mounted(){

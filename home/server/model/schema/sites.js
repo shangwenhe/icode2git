@@ -17,6 +17,11 @@ let sitesSchema = new Schema({
     alias: String,
     path: String,
     describe: String,
+
+    cmd: String,
+    subCmd: String,
+    options: Array,
+
     create_time: {
         type: Date,
         default: Date.now

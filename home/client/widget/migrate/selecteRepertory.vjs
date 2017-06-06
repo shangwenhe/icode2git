@@ -26,7 +26,6 @@
 .migrate-repertory{
     .ivu-col-span-4{
         line-height: 32px;
-        text-align: right;
     }
     .ivu-row{
         margin: 10px 0;
@@ -51,10 +50,9 @@
         props: ['sites', 'paths', 'allpaths'],
         watch:{
             site(nval, oval){
-                console.log(nval, oval); 
                 this.paths = this.allpaths.filter(function(item, key){
-                    console.log(item,key)
-                    if(item.site === nval){
+                    // 站点等于当前所选择的站点，且未迁移
+                    if(item.site === nval && !item.migrate){
                         return true;
                     }
                     return false;

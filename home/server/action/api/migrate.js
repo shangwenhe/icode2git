@@ -5,7 +5,7 @@
  * @description: this is a <js> file
  */
 /* eslint-disable */
-import migrate from '../../model/migrate';
+import migrate from '../../service/migrate';
 
 
 function post(req, res) {
@@ -25,8 +25,19 @@ function get(req, res) {
         });
     });
 }
+
+function removeById(req, res){
+    migrate.remove(req.param._id, (err, data)=>{
+        res.json({
+            msg: 'delete',
+            data: data
+        });
+    })
+}
+
 export default {
     post,
     get,
+    delete: removeById
 }
 /* eslint-enable */

@@ -12,17 +12,29 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 let ObjectId = Schema.Types.ObjectId
 
+/**
+ *  @desc 引入配置文件
+ */
+import conf from '../../conf/schema.js';
+
+
 let migrateSchema = new Schema({
-    destination: ObjectId,
+    origin: ObjectId,
     target: ObjectId,
     mark: String,
     username: String,
+    status: {
+        type: String,
+        enum: conf.status,
+        default: 'start'
+    },
     create_time: {
         type: Date,
         default: Date.now
     },
     modify_time: {
-        type: Date
+        type: Date,
+        default: Date.now
     }
 });
 

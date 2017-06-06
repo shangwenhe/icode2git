@@ -30,10 +30,21 @@ class Repertory {
     list(query, callback) {
         repertory.find(query, callback)
     }
+
+    /**
+     * @desc 删除仓库
+     */
     remove(param, callback) {
         repertory.remove(param, callback)
     }
+
+    /**
+     * @desc 修改仓库状态
+     */
+    update(id, param, callback){
+        repertory.update(id, {$set: param}, callback);
+    }
 }
 
-export default new Repertory;
+export default Repertory;
 /* eslint-enable */

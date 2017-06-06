@@ -5,14 +5,32 @@
             请按要求输入...
             <template slot="desc">{{ error }}</template>
         </Alert>
-        <h5><Icon type="locked"></Icon> 站点名字</h5>
-        <i-input v-model="name" placeholder="请输入..."></i-input>
-        <h5><Icon type="shuffle"></Icon> 站点别名</h5>
-        <i-input v-model="alias" placeholder="请输入..."></i-input>
-        <h5><Icon type="link"></Icon> 站点地址</h5>
-        <i-input v-model="path" placeholder="请输入..."></i-input>
+
+        <Row>
+            <i-col span="12">
+                <h5><Icon type="locked"></Icon> 站点名字</h5>
+                <i-input v-model="name" placeholder="请输入..."></i-input>
+                <h5><Icon type="shuffle"></Icon> 站点别名</h5>
+                <i-input v-model="alias" placeholder="请输入..."></i-input>
+                <h5><Icon type="link"></Icon> 站点地址</h5>
+                <i-input v-model="path" placeholder="请输入..."></i-input>
+            </i-col>
+            <i-col span="1"> &nbsp; </i-col>
+            <i-col span="11">
+                <h5><Icon type="chatboxes"></Icon> 下载命令</h5>
+                <i-input v-model="describe" placeholder="请输入..."></i-input>
+                <h5><Icon type="chatboxes"></Icon> 下载子命令</h5>
+                <i-input v-model="describe" placeholder="请输入..."></i-input>
+                <h5><Icon type="chatboxes"></Icon> 命令选项</h5>
+                <i-input v-model="describe" placeholder="请输入..."></i-input>
+            
+            </i-col>
+        </Row>
+
+
+
         <h5><Icon type="chatboxes"></Icon> 站点描述</h5>
-        <i-input v-model="describe" placeholder="请输入..."></i-input>
+        <i-input v-model="describe" type="textarea" :autosize="{minRows: 3,maxRows: 7}"    placeholder="请输入..."></i-input>
         <i-button @click="submit" type="success" long>确认提交</i-button>
         <list :site="site" ></list>
     </div>
@@ -58,7 +76,7 @@
                     this.error = '站点路径不可以为空';
                     return; 
                 }
-                let {name, alias, path, describe} = this;
+                let {name, alias, path, describe } = this;
                  axios.post('/api/sites',{
                      name, alias, path, describe 
                  }).then( (response) => {
@@ -68,7 +86,7 @@
                  });
             } 
         },
-        components: { list }
+        components: { list },
     }
 </script>
 

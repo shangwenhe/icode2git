@@ -6,7 +6,7 @@
  */
 /* eslint-disable */
 
-import repertory from '../../model/repertory';
+import repertory from '../../service/repertory';
 
 function post(req, res) {
     repertory.add(req.body, (err, data) => {
@@ -34,10 +34,33 @@ function deleteById(req, res) {
         });
     });
 }
+function put(req, res){
+    let {action, _id} = req.params;
+    switch(action){
+        case 'update':
+            repertory.update({ _id }, req.body, (err, data) =>{
+                res.json({
+                    msg: 'update',
+                    data: data
+                });
+            });
+            break;
+        case 'download':
+        default:
+        repertory.update({ _id }, req.body, (err, data) =>{
+            res.json({
+                msg: 'download',
+                data: data
+            });
+        })
+
+    }
+}
 
 export default {
     post,
     get,
-    delete: deleteById
+    delete: deleteById,
+    put
 };
 /* eslint-enable */

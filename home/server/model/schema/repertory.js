@@ -12,12 +12,23 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 let ObjectId = Schema.Types.ObjectId
 
+/**
+ *  @desc 引入配置文件
+ */
+import conf from '../../conf/schema.js';
+
 let repertorySchema = new Schema({
     site: String,
     path: String,
+    localpath: String,
     migrate: {
         type: Boolean,
         default: false
+    },
+    status: {
+        type: String,
+        enum: conf.status,
+        default: 'start'
     },
     create_time: {
         type: Date,

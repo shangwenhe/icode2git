@@ -1,0 +1,58 @@
+<template>
+    <div class='tmpl-list'>
+        <h2><Icon type="ios-folder"></Icon> 迁移列表</h2>
+
+            <Row>
+            <i-col span="1">#</i-col>
+            <i-col span="13">来源=》目标</i-col>
+            <i-col span="6">备注</i-col>
+            <i-col span="2">操作员</i-col>
+            <i-col span="2">修改时间</i-col>
+            </Row>
+        <ul>
+        <li v-for="(item,key) in list">
+            <Row>
+            <i-col span="1">{{ (key+1) }}</i-col>
+            <i-col span="13">
+                <div class='detail-info origin'>
+                    <p>来源站点：{{ item.origin.site }}</p>
+                    <p><Icon type="social-github-outline"></Icon> 来源仓库：{{ item.origin.path }}</p>
+                    <p><Icon type="ios-timer-outline"></Icon> 来源时间：{{ item.origin.create_time }}</p>
+                </div>
+                <div class='detail-info target'>
+                    <p>目标站点：{{ item.target.site }}</p>
+                    <p><Icon type="social-github"></Icon> 目标仓库：{{ item.target.path }}</p>
+                    <p><Icon type="ios-timer"></Icon> 目标时间：{{ item.target.create_time }}</p>
+                </div>
+            </i-col>
+            <i-col span="6">{{ item.mark }}</i-col>
+            <i-col span="2">{{ item.username }}</i-col>
+            <i-col span="2">{{ item.modify_time }}</i-col>
+            </Row>
+        </li>
+        </ul>
+    </div>
+</template>
+<style lang='less'>
+.tmpl-list{
+    line-height: 25px;
+    li{
+        border-top: 1px solid #ccc;
+        margin: 5px 0;
+    }
+    .detail-info{
+    
+    }
+}
+</style>
+<script type='text/javascript'>
+    export default{
+        data(){
+            return {
+                list: [],            
+            }
+        },
+        props: [ 'list' ],
+        components: { }
+    }
+</script>

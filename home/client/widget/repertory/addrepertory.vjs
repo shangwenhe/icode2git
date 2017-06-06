@@ -11,6 +11,8 @@
         </i-select>
         <h5><Icon type="social-github"></Icon> 输入仓库路径</h5>
         <i-input v-model="path" placeholder="http://git.xiaodutv.com/namespace/repertory.git" ></i-input>
+        <h5><Icon type="link"></Icon> 本地存放地址</h5>
+        <i-input v-model="localpath" placeholder="请输入..."></i-input>
         <p class='add-submit'>
         <i-button type="success" @click="addsubmit" long>确认提交</i-button>
         </p>
@@ -47,6 +49,7 @@
                 ],
                 site: '',
                 path: '',
+                localpath: '', 
                 error: null
             }
         },
@@ -68,10 +71,13 @@
                     this.error = '请填写真实的仓库地址';
                     return;
                 }
-                let {site, path, username } = this;
+                if(!this.localpath){
+                    this.localpath = this.path.split('/').slice(3).join('/');
+                }
+                let {site, path, username, localpath } = this;
                 // 添加数据
                 axios.post('/api/repertory',{
-                    site, path , username
+                    site, path , username, localpath 
                 }).then( (response) => {
                     console.log(response.data.data);
                     this.$emit('addrep', response.data.data);
@@ -82,6 +88,13 @@
                 this.site = '';
                 this.path = '';
                 this.error = null;
+            }
+        },
+        watch:{
+            path(nval, oval){
+                if(!this.localpath){
+                    this.localpath = this.path.split('/').slice(3).join('/');
+                }
             }
         }
     }

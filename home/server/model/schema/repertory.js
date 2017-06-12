@@ -18,7 +18,7 @@ let ObjectId = Schema.Types.ObjectId
 import conf from '../../conf/schema.js';
 
 let repertorySchema = new Schema({
-    site: String,
+    site: ObjectId,
     path: String,
     localpath: String,
     migrate: {
@@ -28,7 +28,7 @@ let repertorySchema = new Schema({
     status: {
         type: String,
         enum: conf.status,
-        default: 'start'
+        default: conf.status[0]
     },
     create_time: {
         type: Date,

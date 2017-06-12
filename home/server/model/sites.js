@@ -30,8 +30,15 @@ class Sites {
     list(query, callback) {
         sites.find(query, callback)
     }
+
     remove(param, callback) {
         sites.remove(param, callback)
+    }
+    /**
+     * @desc 修改仓库状态
+     */
+    update(id, param, callback){
+        sites.update(id, {$set: param}, callback);
     }
 }
 

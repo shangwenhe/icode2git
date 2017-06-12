@@ -17,6 +17,10 @@ export default  {
         'uploading',
         'uploadafter',
         'end'
+    ],
+    logintype:[
+        'username',
+        'ssh'
     ]
 };
 /* eslint-enable */

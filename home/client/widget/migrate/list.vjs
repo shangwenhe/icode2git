@@ -14,18 +14,19 @@
             <Row>
             <i-col span="1">{{ (key+1) }}</i-col>
             <i-col span="13">
+                <p><a :href='"#/launch/" + item._id'>{{ item._id }}</a></p>
                 <div class='detail-info origin'>
-                    <p>来源站点：{{ item.origin.site }}</p>
+                    <p>来源站点：{{ item.origin.site.name }}</p>
                     <p><Icon type="social-github-outline"></Icon> 来源仓库：{{ item.origin.path }}</p>
                     <p><Icon type="ios-timer-outline"></Icon> 来源时间：{{ item.origin.create_time }}</p>
                 </div>
                 <div class='detail-info target'>
-                    <p>目标站点：{{ item.target.site }}</p>
+                    <p>目标站点：{{ item.target.site.name }}</p>
                     <p><Icon type="social-github"></Icon> 目标仓库：{{ item.target.path }}</p>
                     <p><Icon type="ios-timer"></Icon> 目标时间：{{ item.target.create_time }}</p>
                 </div>
             </i-col>
-            <i-col span="6">{{ item.mark }}</i-col>
+            <i-col span="6">{{ item.mark|| '未' }}</i-col>
             <i-col span="2">{{ item.username }}</i-col>
             <i-col span="2">{{ item.modify_time }}</i-col>
             </Row>

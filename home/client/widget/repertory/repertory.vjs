@@ -1,5 +1,6 @@
 <template>
     <div class='repertory'>
+        <navigator active='repertory'></navigator>
         <addrepertory v-on:addrep=getaddrepertory
         :username="username">
         </addrepertory>
@@ -19,6 +20,11 @@
     import addrepertory from './addrepertory.vjs';
     import repertorylist from './repertorylist.vjs';
     import axios  from '../../static/lib/ajax/axios.js';
+    // import user  from '../../static/lib/user/user.js';
+    let user = require('home:static/lib/user/user').default;
+
+
+
 
     export default{
         components: { 
@@ -38,17 +44,9 @@
         },
         created(){
             // 如果没有设置username则让其跳到登录页面
-            let author = window.localStorage.getItem('author');
-            if(!author){
-                window.location.hash= '#/login';
-            }
-            try{
-                author = JSON.parse(author);
-                if(!author['xiaodu']['username']){
-                    throw('username empty') 
-                }
-                this.username = author['xiaodu']['username'];
-            }catch(e){
+            this.username = user.name();
+            console.log(this.username)
+            if(!this.username){
                 window.location.href = '#/login';
             }
         },

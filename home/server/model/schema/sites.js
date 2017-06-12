@@ -12,15 +12,25 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 let ObjectId = Schema.Types.ObjectId
 
+/**
+ *  @desc 引入配置文件
+ */
+import conf from '../../conf/schema.js';
+
 let sitesSchema = new Schema({
     name: String,
     alias: String,
     path: String,
     describe: String,
 
-    cmd: String,
-    subCmd: String,
-    options: Array,
+    downloadcmd: String,
+    uploadcmd: String,
+    updatecmd: String,
+    logintype: {
+        type: String,
+        enum: conf.logintype,
+        default: conf.logintype[0]
+    },
 
     create_time: {
         type: Date,

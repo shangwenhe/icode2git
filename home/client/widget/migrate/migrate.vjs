@@ -1,57 +1,40 @@
 <template>
     <div class='migrate'> 
-        <h2><Icon type="code-working"></Icon> {{ title }}</h2>
+        <navigator active='migrate'></navigator>
+        <h2><Icon type="code-working"></Icon> 选择迁移仓库</h2>
+        <Alert type="error" v-show="error" show-icon>
+            迁移仓库参数出错
+            <span slot="desc">
+                {{ error }}
+            </span>
+        </Alert>
         <h4><Icon type="map"></Icon> 迁移仓库</h4>
         <Row>
             <i-col span="11">
-                <Alert type="error" v-show="originerror" show-icon>
-                    迁移仓库参数出错
-                    <span slot="desc">
-                        {{ originerror }}
-                    </span>
-                </Alert>
                 <selecte-repertory
                     :sites="sites"
                     :paths="paths"
+                    :info="migrate.origin"
                     :allpaths="paths"
-                    ref="origin"
                     ></selecte-repertory>
-                <Row>
-                    <i-col span="12">
-                        <i-button @click="downloadOriginCode" type="success" long>下载代码</i-button>
-                    </i-col>
-                    <i-col span="1">
-                    &nbsp;
-                    </i-col>
-                    <i-col span="11">
-                        <i-button @click="updateOriginCode" type="warning" long>更新代码</i-button>
-                    </i-col>
-                </Row>
-
             </i-col>
             <i-col span="2" :class="['col-middle']">
-            <Icon type="arrow-right-a"></Icon>
-            <Icon type="network"></Icon> 
+                <Icon type="arrow-right-a"></Icon>
+                <Icon type="network"></Icon> 
             </i-col>
             <i-col span="11">
-                <Alert type="error" v-show="targeterror" show-icon>
-                    迁移仓库参数出错
-                    <span slot="desc">
-                        {{ targeterror }}
-                    </span>
-                </Alert>
                 <selecte-repertory
                     :sites="sites"
                     :paths="paths"
+                    :info="migrate.target"
                     :allpaths="paths"
-                    ref="target"
                     ></selecte-repertory>
-                <i-button @click="uploadTargetCode" type="success" disabled long>上传代码</i-button>
             </i-col>
         </Row>
         <h4><Icon type="chatboxes"></Icon> 迁移备注</h4>
         <i-input v-model="mark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
-        <i-button @click="submit" type="success" disabled long>确认提交</i-button>
+        <i-button @click="submit" type="success" long>确认迁移</i-button>
+
         <migrate-list :list=list></migrate-list>
     </div>
 </template>
@@ -90,6 +73,9 @@
     import axios  from '../../static/lib/ajax/axios.js';
     import selecteRepertory from './selecteRepertory.vjs'
     import migrateList from './list.vjs'
+    // import user  from '../../static/lib/user/user.js';
+    let user = require('home:static/lib/user/user').default;
+
     let conf = { status :[
         'start',
         'downloadbefore',
@@ -105,18 +91,22 @@
     export default {
         data(){
             return{
-                title: '选择迁移',
                 sites: [ ],
                 paths:[ ],
                 list: [],
-                origin: '',
-                originerror: false,
 
-                target:'',
-                targeterror: false,
+                migrate:{
+                    origin:{
+                        path: '',
+                        site: ''
+                    },
+                    target:{
+                        path: '',
+                        site: ''
+                    }
+                },
                 mark: '',
-
-                migrateStatus: conf.status[0]
+                error: false
             }
         },
         components:{
@@ -147,9 +137,13 @@
         },
         methods:{
             submit(){
-                let [origin, target, mark] = [this.$refs.origin.path, this.$refs.target.path, this.mark];
-                let author = JSON.parse(window.localStorage.getItem('author')); 
-                let { username } = author['xiaodu'];
+                let [origin, target, mark] = [this.migrate.origin.path, this.migrate.target.path, this.mark];
+                let username  = user.name();
+                if(origin === target){
+                    this.error = '选择的仓库不能是一样的';
+                    return;
+                }
+                this.error = false;
 
                 axios.post('/api/migrate',{
                     origin, target, mark, username
@@ -159,52 +153,6 @@
                     console.log(error);
                 });
             },
-            uploadTargetCode(){
-               // this.$refs.target.path  
-            },
-            downloadOriginCode(event, mk){
-                if(!this.$refs.origin.site ){
-                    this.originerror = '请选择站点';
-                    return;
-                }
-                if(!this.$refs.origin.path ){
-                    this.originerror = '请选择迁移仓库';
-                    return;
-                }
-                this.originerror = false;
-
-                axios.put('/api/repertory/' + this.$refs.origin.path +'/download',{
-                    status: conf.status[1] 
-                }) .then((response)=>{
-                    console.log(response.data.data);
-                }).catch(function (error) {
-                    console.log(error);
-                });
-                 
-
-            },
-            updateOriginCode(){
-               // this.$refs.origin.path  
-
-                if(!this.$refs.origin.site ){
-                    this.originerror = '请选择站点';
-                    return;
-                }
-                if(!this.$refs.origin.path ){
-                    this.originerror = '请选择迁移仓库';
-                    return;
-                }
-                this.originerror = false;
-
-                axios.put('/api/repertory/' + this.$refs.origin.path +'/update',{
-                    status: conf.status[2] 
-                }) .then((response)=>{
-                    console.log(response.data.data);
-                }).catch(function (error) {
-                    console.log(error);
-                });
-                 
-            }
         }
     }
 </script>

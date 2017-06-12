@@ -1,9 +1,15 @@
 <template>
     <div class='migrate-repertory'>
+        <Alert type="error" v-show="error" show-icon>
+            迁移仓库参数出错
+            <span slot="desc">
+                {{ error }}
+            </span>
+        </Alert>
         <Row>
             <i-col span="4"><Icon type="link"></Icon> 站点: &nbsp; </i-col>
             <i-col span="20">
-                <i-select v-model="site">
+                <i-select v-model="info.site">
                     <i-option v-for="item in sites" 
                         :value="item.name" 
                         :key="item">{{ item.name }}: {{item.path}} {{item.describe}}</i-option>
@@ -13,7 +19,7 @@
         <Row>
             <i-col span="4"><Icon type="fork-repo"></Icon> 仓库地址: &nbsp; </i-col>
             <i-col span="20">
-                <i-select v-model="path">
+                <i-select v-model="info.path">
                     <i-option v-for="item in paths" 
                         :value="item._id" 
                         :key="item">{{ item.path }}</i-option>
@@ -37,27 +43,72 @@
     export default{
         data(){
             return {
-                sites: [
-                ],
-                site:'',
+                status: 'unload',
+                sites: [],
+                paths:[],
+                allpaths:[],
 
-                paths:[
-                ],
-                path:'',
-                allpaths:[]
+                error: false
             }
         },
-        props: ['sites', 'paths', 'allpaths'],
+        props: ['sites', 'paths', 'allpaths', 'info'],
         watch:{
-            site(nval, oval){
+            'info.site': function(nval,oval){
                 this.paths = this.allpaths.filter(function(item, key){
                     // 站点等于当前所选择的站点，且未迁移
-                    if(item.site === nval && !item.migrate){
+                    if(item.site_name === nval && !item.migrate){
                         return true;
                     }
                     return false;
                 })
             }
+        },
+        methods:{
+            uploadTargetCode(){
+               // this.$refs.target.path  
+            },
+            downloadOriginCode(event, mk){
+                if(!this.info.site ){
+                    this.error = '请选择站点';
+                    return;
+                }
+                if(!this.info.path ){
+                    this.error = '请选择迁移仓库';
+                    return;
+                }
+                this.error = false;
+
+                axios.put('/api/repertory/' + this.path +'/download',{
+                    status: conf.status[1] 
+                }) .then((response)=>{
+                    console.log(response.data.data);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+
+            },
+            updateOriginCode(){
+               // this.path  
+                if(!this.site ){
+                    this.error = '请选择站点';
+                    return;
+                }
+                if(!this.path ){
+                    this.error = '请选择迁移仓库';
+                    return;
+                }
+                this.error = false;
+
+                axios.put('/api/repertory/' + this.path +'/update',{
+                    status: conf.status[2] 
+                }) .then((response)=>{
+                    console.log(response.data.data);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+                 
+            }
+        
         }
     }
 </script>

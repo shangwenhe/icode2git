@@ -21,6 +21,7 @@
     "debuglog": "1.0.1",
     "mongo": "^0.1.0",
     "mongoose": "^4.10.4",
+    "nodegit": "^0.18.3",
     "yog2": "^1.5.5",
     "yog2-kernel": "1.8.1"
   }

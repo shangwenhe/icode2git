@@ -47,12 +47,12 @@ function put(req, res){
             break;
         case 'download':
         default:
-        repertory.update({ _id }, req.body, (err, data) =>{
-            res.json({
-                msg: 'download',
-                data: data
-            });
-        })
+            repertory.download({ _id }, req.body, (err, data) =>{
+                res.json({
+                    msg: 'download',
+                    data: data
+                });
+            })
 
     }
 }

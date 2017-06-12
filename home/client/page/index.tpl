@@ -23,10 +23,16 @@
             let iView = require("home:static/lib/ivue/iview.min.js");
             Vue.use(iView);
 
-
             Vue.use(VueRouter)
-            const router = new VueRouter( routes)
 
+            let navigator = require("home:widget/nav/nav.vjs");
+            Vue.component('navigator', navigator.default);
+
+            const router = new VueRouter( routes)
+            // router.beforeEach(function(to, from, next){
+            //     console.log(to, from) 
+            //     next();
+            // })
             const app = new Vue({
               router
             }).$mount('#app')

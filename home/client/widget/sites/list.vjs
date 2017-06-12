@@ -1,15 +1,29 @@
 <template>
     <div class='tmpl-list'>
-        <h2><Icon type="ios-folder"></Icon> 站点列表</h2>
+        <h2 class='title'><Icon type="ios-folder"></Icon> 站点列表</h2>
+        <Modal
+            v-model="detailInfo"
+            title="站点详细信息" >
+            <Row  v-for="(item,key) in itemInfo">
+                <i-col span="6">{{ keys[key] }}:</i-col>
+                <i-col span="18">{{ item }}</i-col>
+            </Row>
+        </Modal>
         <i-table :columns="columns" :data="list"></i-table>
     </div>
 </template>
 <style lang='less'>
 .tmpl-list{
-    h2{
+    h2.title{
         margin: 15px 0 10px;
     }
 }
+    .ivu-modal-wrap{
+        .ivu-row{
+            line-height: 25px;
+            height: 25px;
+        }
+    }
 </style>
 <script lang='js'>
     import axios  from '../../static/lib/ajax/axios.js';
@@ -17,6 +31,21 @@
     export default{
         data(){
             return {
+                keys: { 
+                    _id:'id',
+                    name: '站点名',
+                    alias: '站点别名',
+                    path: '站点地址',
+                    describe: '相关描述',
+                    __v: 'V',
+                    downloadcmd: '下载命令',
+                    uploadcmd: '上传命令',
+                    updatecmd: '更新命令',
+                    create_time: '创建时间',
+                    logintype: '登录方式',
+                } ,
+                detailInfo: false,
+                itemInfo: {},
                 columns:[
                     {
                         type: 'index',
@@ -24,18 +53,22 @@
                         width: 80
                     },
                     {
-                        title: '站点名',
-                        key: 'name',
-                        width: 100
-                    },
-                    {
-                        title: '站点别名',
+                        title: '别名',
                         key: 'alias',
-                        width: 100
+                        width: 80 
                     },
                     {
                         title: '站点地址',
                         key: 'path'
+                    },
+                    {
+                        title: '登录',
+                        key: 'logintype',
+                        width: 100 
+                    },
+                    {
+                        title: '下载命令',
+                        key: 'downloadcmd'
                     },
                     {
                         title: '站点描述',
@@ -48,16 +81,15 @@
                         render: (h, params)=>{
                           return h('Button', {
                                     props: {
-                                        type: 'error',
+                                        type: 'text',
                                         size: 'small'
                                     },
                                     on: {
                                         click: () => {
-                                            this.remove(params.index)
+                                            this.show(params.index)
                                         }
                                     }
-                                }, '删除')
-                        
+                                }, '查看')
                         }
                     }
                 ],
@@ -79,17 +111,19 @@
             }
         },
         methods:{
-            remove(index){
+            show(index){
                 
                 let _id = this.list[index]['_id'];
+                this.itemInfo = this.list[index];
+                this.detailInfo = true;
+                console.log(this.list[index])
                 // 删除数据
-                axios.delete('/api/sites/'+  _id).then( (response) => {
-                    this.list.splice(index,1);
-                }).catch(function (error) {
-                    console.log(error);
-                });
-
-                
+                console.log( 'axios.delete(\'/api/sites/'+  _id + '\')');
+                // axios.delete('/api/sites/'+  _id).then( (response) => {
+                //     this.list.splice(index,1);
+                // }).catch(function (error) {
+                //     console.log(error);
+                // });
             }
         },
         components: { }

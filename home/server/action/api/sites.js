@@ -34,10 +34,20 @@ function deleteById(req, res) {
         });
     });
 }
+function put(req, res){
+    let {_id} = req.params;
+    sites.update({ _id }, req.body, (err, data) =>{
+        res.json({
+            msg: 'update',
+            data: data
+        });
+    });
+}
 
 export default {
     post,
     get,
+    put,
     delete: deleteById
 };
 /* eslint-enable */

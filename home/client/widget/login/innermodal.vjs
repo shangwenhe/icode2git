@@ -6,8 +6,14 @@
             <div class="ivu-modal-body">
                <template v-if="!status">
                    <Alert v-if='error' type="error"  show-icon>{{ error }}</Alert>
-                   <i-input v-on:on-blur="usernameblur(username)" type='text' v-model="username" placeholder="请输入用户名..."></i-input> 
-                   <i-input type='password' v-model="password" placeholder="请输入密码..."></i-input> 
+                   <template v-if="logintype == 'username'">
+                       <i-input v-on:on-blur="usernameblur(username)" type='text' v-model="username" placeholder="请输入用户名..."></i-input> 
+                       <i-input type='password' v-model="password" placeholder="请输入密码..."></i-input> 
+                   </template>
+                   <template v-else>
+                   <i-input :style="{height:77+'px'}" v-model="password" type="textarea" :autosize="{minRows:
+                   3,maxRows: 5}" placeholder="请粘贴形如这样的格式的ssh-rsa公钥：机器输入请勿更改...  "></i-input>
+                   </template>
                    <i-button type="success" @click="submit" long>{{ success }}</i-button>
                </template>
                <template v-else>
@@ -29,27 +35,43 @@
                 success: '',
                 title:'',
                 status: false,
+                logintype:'username',
                 error: '' 
             }
         },
-        props: ['username', 'name', 'password', 'title', 'success', 'status', 'indexkey'],
+        props: [
+            'username', 'name', 'password',
+            'title', 'success', 'status', '_id',
+            'logintype'
+        ],
         methods:{
             usernameblur(username){
                 console.log(username)
             },
             addUserinfo(){
                 let author = JSON.parse(window.localStorage.getItem('author') || '{}');
-                author[this.name] = {
+                author[this._id] = {
                      title: this.title,
                      username: this.username,
                      password: this.password,
                      success: this.success,
-                     indexkey: this.indexkey,
-                     status: this.status 
+                     status: this.status,
+                     logintype: this.logintype
                 }
                 window.localStorage.setItem('author', JSON.stringify(author));
             },
             submit(){
+                if(this.logintype == 'ssh'){
+                    if(!this.password){
+                        this.error = 'ssh-keygen不可以为空'
+                        return;
+                    }
+                    this.username = 'machine';
+                    this.error = null 
+                    this.status = true
+                    this.addUserinfo();
+                
+                }
                 if(this.username && this.password){
                     this.error = null 
                     this.status = true

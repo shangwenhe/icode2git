@@ -1,0 +1,72 @@
+<template>
+    <div id="nav">
+        <i-menu mode="horizontal" theme="light" :active-name="active">   
+        <Menu-item v-for="(router, index) in routes" :name="router.name">
+            <router-link :to="router.path">
+                <Icon :type="router.icon"></Icon>
+                {{ router.name }}
+            </router-link>
+        </Menu-item>
+        </i-menu>
+        <ul>
+            <li>
+            </li>
+        </ul>
+    </div>
+</template>
+<style lang='less'>
+#nav{
+    a{
+        color: #333;
+        font-size: 14px;
+    } 
+    .ivu-menu-item-active{
+        a{
+            color: #39f
+        }
+    }
+    margin: 20px 0;
+}
+</style>
+<script>
+    export default {
+        data() {
+            return{
+                routes:[
+                    {
+                        path: '/',
+                        name: 'home',
+                        icon: 'home',
+                    },
+                    {
+                        path: '/sites',
+                        name: 'sites',
+                        icon: 'link',
+                    },
+                    {
+                        path: '/login',
+                        name: 'login',
+                        icon: 'person-add',
+                    },
+                    {
+                        path: '/repertory',
+                        name: 'repertory',
+                        icon: 'social-github',
+                    },
+                    {
+                        path: '/migrate',
+                        name: 'migrate',
+                        icon: 'shuffle',
+                    },
+                    {
+                        path: '/launch',
+                        name: 'launch',
+                        icon: 'android-upload',
+                    },
+                ],
+                active: 1
+            }
+        },
+        props: ['active']
+    }
+</script>

@@ -1,0 +1,82 @@
+<template>
+    <div class='tmpl-launch'>
+        <navigator active='launch'></navigator>
+        <h2><Icon type="code-working"></Icon> 迁移仓库</h2>
+        <h4><Icon type="map"></Icon> 迁移仓库</h4>
+        <Row>
+            <i-col span="4"><Icon type="link"></Icon> 站点: &nbsp; </i-col>
+            <i-col span="20">{{ data.origin.site.name }}</i-col>
+        </Row>
+        <Row>
+            <i-col span="4"><Icon type="fork-repo"></Icon> 仓库地址: &nbsp; </i-col>
+            <i-col span="20">{{ data.origin.path }}</i-col>
+        </Row>
+        <i-button @click="submit" type="success" long>仓库下载</i-button>
+
+        <h4><Icon type="map"></Icon> 迁移仓库</h4>
+        <Row>
+            <i-col span="4"><Icon type="link"></Icon> 站点: &nbsp; </i-col>
+            <i-col span="20">{{ data.target.site.name }}</i-col>
+        </Row>
+        <Row>
+            <i-col span="4"><Icon type="fork-repo"></Icon> 仓库地址: &nbsp; </i-col>
+            <i-col span="20">{{ data.target.path }}</i-col>
+        </Row>
+        <i-button @click="submit" type="success" long>仓库上传</i-button>
+
+    </div>
+</template>
+<style lang='less'>
+.tmpl-launch{
+    margin: 20px;
+    h2{
+        margin-bottom: 15px;
+    }
+    .ivu-row{
+        margin: 10px 0;
+    }
+    .ivu-btn-warning,
+    .ivu-btn-success{
+        margin: 10px auto 20px;
+    }
+}
+</style>
+<script type='text/javascript'>
+    import axios  from '../../static/lib/ajax/axios.js';
+    export default{
+        data(){
+            return {
+                data: {
+                    origin: {
+                        site: '',
+                        path: '',
+                    },
+                    target: {
+                        site: '',
+                        path: '',
+                    }
+                }
+            }
+        },
+        props: [],
+        components: { },
+        created(){
+            let { id } = this.$route.params;
+            console.log(id);
+            axios.get('/api/migrate',{
+                params:{
+                    _id: id
+                }
+            }).then((ret)=>{
+                this.data = ret.data.data[0];
+                console.log(this.data)
+            })
+            
+        },
+        methods:{
+            submit(){
+            
+            }
+        }
+    }
+</script>

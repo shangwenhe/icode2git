@@ -1,5 +1,6 @@
 <template>
     <div class='login-page'>
+        <navigator active='login'></navigator>
         <h2><Icon type="home" size='25'></Icon> 校验用户</h2>
         <div class='modals'>
             <innermodal v-for="(modal, index) in modals"
@@ -9,7 +10,8 @@
                 :title="modal.title"
                 :success="modal.success"
                 :status="modal.status"
-                :indexkey="index"
+                :logintype="modal.logintype"
+                :_id="modal._id"
                 ></innermodal>
         </div>
         <i-button type="ghost" long @click='gorepertory'>添加仓库列表 go! go! </i-button>
@@ -40,7 +42,8 @@
     export default {
         data() {
            return {
-               modals:{}
+               modals:{},
+               name: 'login'
             }
         },
         methods:{
@@ -59,14 +62,13 @@
                              username: '',
                              password: '',
                              success: '登录' + value.name,
-                          }, value, author && author[value.name]  )
+                          }, value, author && author[value._id]  )
                         ) 
                   });
                   this.modals = list;
              }).catch( (error) => {
                 console.log(error)
              });
-        
         },
         components:{ innermodal }
     }

@@ -7,35 +7,44 @@
 /* eslint-disable */
 
 let exec = require('child_process').exec;
+import async from 'async';
+import curl from './curl';
 const REPPATH = yog.ROOT_PATH + '/tmpl/';
 
-class Git{
+class Git {
+    replace(map, regexStr) {
+        return regexStr.replace(/\$\{(.*?)\}/ig, function(m, k) {
+            return map[k.replace(' ', '')];
+        });
+    }
+
     /**
      * @desc clone code
      * @param {object} repertory  仓库的详细信息
      * @param {function} callback 回调函数
      */
-    clone(repertory, callback){
+    clone(repertory, callback) {
         // 判断logintype[登录类型]
-        if(repertory.site.logintype == 'username'){
+        if (repertory.site.logintype == 'username') {
             this.cloneByHttp(repertory, callback);
-        }else{
+        } else {
             this.cloneBySsh(repertory, callback);
         }
     }
+
     /**
      * @desc clone代码通过http
      * @param {object} repertory  仓库的详细信息
      * @param {function} callback 回调函数
      */
-    cloneByHttp(repertory, callback){
-        let map={ path : repertory.path};
-        let cmd = repertory.site.downloadcmd.replace(/\$\{(.*?)\}/ig, function(m,k){ return map[k.replace(' ','')]; });
-        
-       exec([cmd, REPPATH+repertory.localpath].join(' '), function(err, stdout, stderr){
-            console.log(err, stdout) 
+    cloneByHttp(repertory, callback) {
+        let cmd = this.replace({
+            path: repertory.path
+        }, repertory.site.downloadcmd);
+
+        exec([cmd, REPPATH + repertory.localpath].join(' '), function(err, stdout, stderr) {
             callback(null, repertory);
-       })
+        })
 
 
     }
@@ -45,11 +54,20 @@ class Git{
      * @param {object} repertory  仓库的详细信息
      * @param {function} callback 回调函数
      */
-    cloneBySsh(repertory, callback){
-        console.log(repertory.site.downloadcmd);
-        let downloadcmd = repertory.downloadcmd;
-        // exec();
-        callback(null, repertory);
+    cloneBySsh(repertory, callback) {
+
+        let cmd = this.replace({
+            path: repertory.path
+        }, repertory.site.downloadcmd);
+
+        exec([cmd, REPPATH + repertory.localpath].join(' '), function(err, stdout, stderr) {
+            curl.setStatus(repertory._id, 'downloadafter', function(err) {
+                callback(err, {
+                    cmd,
+                    path: repertory.localpath
+                })
+            });
+        })
     }
 
     /**
@@ -57,18 +75,45 @@ class Git{
      * @param {object} repertory  仓库的详细信息
      * @param {function} callback 回调函数
      */
-    update(repertory, callback){
-        console.log(repertory);
-        callback(null, url) 
+    update(repertory, callback) {
+        callback(null, url)
     }
+
     /**
      * @desc 上传代码
      * @param {object} repertory  仓库的详细信息
      * @param {function} callback 回调函数
      */
-    pushOrigin(localpath, callback){
-        callback(null, url) 
+    pushOrigin(repertory, callback) {
+
+        // 切换目录
+        let workDir = ['cd', REPPATH + repertory.originPath,';'].join(' ')
+        async.waterfall([
+                
+            // git remote add xiaodtv http://git.xiaodutv.com/migrate/node-proxy.git 
+            (callback) => {
+                let remote = this.replace({
+                    origin: repertory.site.name,
+                    path: repertory.path
+                }, "git remote add ${origin} ${path}");
+                exec(workDir + remote, function(err, result){
+                   callback(err, result) 
+                });
+            },
+
+            // git push xiaodtuv master 
+            (result, callback) => {
+                let push = this.replace({
+                    origin: repertory.site.name,
+                    branch: 'master'
+                }, "git push ${origin} ${branch}");
+                exec(workDir + push, callback);
+            }
+
+        ], callback)
     }
 }
-export default new Git;
+// curl -i -X PUT  127.0.0.1:8085/api/repertory/:id/:status
+export
+default new Git;
 /* eslint-enable */

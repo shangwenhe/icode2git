@@ -33,7 +33,7 @@ class serviceRepertory extends Repertory {
         /**
          * @desc 更新本地仓库
          */
-    update(id, body, callback) {
+    updateCode(id, body, callback) {
             async.waterfall([
                 /**
                  * @desc 通过ID取得仓库的详细信息
@@ -60,9 +60,8 @@ class serviceRepertory extends Repertory {
                 /**
                  * @desc 通过仓库的详细信息 更新本地仓库
                  */
-                (repertory, callback) => {
-                    Git.update(repertory, callback);
-                },
+                Git.update,
+
                 /**
                  * @desc 通过仓库的详细信息 更新仓库信息
                  */
@@ -74,7 +73,7 @@ class serviceRepertory extends Repertory {
         /**
          * @desc 下载本地仓库
          */
-    download(id, body, callback) {
+    downloadCode(id, body, callback) {
         async.waterfall([
             /**
              * @desc 通过ID取得仓库的详细信息
@@ -98,18 +97,57 @@ class serviceRepertory extends Repertory {
                 })
             },
             /**
-             * @desc 通过仓库的详细信息 下载本地仓库
-             */
-            (repertory, callback) => {
-                Git.clone(repertory, callback);
-            },
-            /**
              * @desc 通过仓库的详细信息 下载仓库信息
              */
             (repertory, callback) => {
-                super.update(id, body, callback);
-            }
+                super.update(id, body, function(err){
+                    callback(err, repertory) ;
+                });
+            },
+
+            /**
+             * @desc 通过仓库的详细信息 下载本地仓库
+             */
+            Git.clone.bind(Git)
         ], callback)
+    }
+
+    uploadCode(id, body, callback){
+        async.waterfall([
+            (callback) => {
+                // super.update(id, {
+                //     status: body.status
+                // }, callback);
+                callback(null, 123)
+            },
+            (result, callback)=>{
+                // 取得迁移仓库的详细信息
+                super.list({_id: body.origin}, callback);
+            },
+            (result, callback)=>{
+                // 取得要迁往仓库的详细信息
+                super.list(id, function(err, targetPro){
+                    let target = targetPro[0];
+                    callback(err, Object.assign({}, target._doc, {
+                        originPath: result[0]['localpath']
+                    }));
+                });
+            },
+            (item, callback) => {
+                Sites.list({
+                    _id: item.site
+                }, function(err, result) {
+                    callback(err, Object.assign({}, item, {
+                        site: result[0],
+                        site_name: result[0]['name']
+                    }));
+                })
+            },
+            /***
+             * @desc 向目标仓库提交数据
+             */ 
+            Git.pushOrigin.bind(Git)
+        ],callback);
     }
 }
 export

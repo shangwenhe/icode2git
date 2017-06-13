@@ -9,13 +9,19 @@
 export default  {
     status :[
         'start',
-        'downloadbefore',
-        'update',
-        'downloading',
-        'downloadafter',
-        'uploadbefore',
-        'uploading',
-        'uploadafter',
+
+        'downloadbefore', // 未下载
+        'downloading',    // 下载中
+        'downloadafter',  // 下载完成
+
+        'uploadbefore',   // 未上传
+        'uploading',      // 上传中
+        'uploadafter',    // 上传完成
+
+        'updatebefore',   // 未更新
+        'updateing',      // 更新中
+        'updateafter',    // 更新完成
+
         'end'
     ],
     logintype:[

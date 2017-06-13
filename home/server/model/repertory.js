@@ -11,6 +11,7 @@ import repertory from './schema/repertory';
 import async from 'async';
 
 class Repertory {
+    
     /**
      *  @desc 添加仓库地址
      * */

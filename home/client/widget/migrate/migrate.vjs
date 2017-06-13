@@ -33,7 +33,7 @@
         </Row>
         <h4><Icon type="chatboxes"></Icon> 迁移备注</h4>
         <i-input v-model="mark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
-        <i-button @click="submit" type="success" long>确认迁移</i-button>
+        <i-button @click="submit" type="success" long>确认迁移仓库对应关系</i-button>
 
         <migrate-list :list=list></migrate-list>
     </div>
@@ -76,17 +76,6 @@
     // import user  from '../../static/lib/user/user.js';
     let user = require('home:static/lib/user/user').default;
 
-    let conf = { status :[
-        'start',
-        'downloadbefore',
-        'update',
-        'downloading',
-        'downloadafter',
-        'uploadbefore',
-        'uploading',
-        'uploadafter',
-        'end'
-    ]}
 
     export default {
         data(){

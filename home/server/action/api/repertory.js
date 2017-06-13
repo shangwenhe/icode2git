@@ -38,21 +38,53 @@ function put(req, res){
     let {action, _id} = req.params;
     switch(action){
         case 'update':
-            repertory.update({ _id }, req.body, (err, data) =>{
+            // 更新仓库
+            repertory.updateCode({ _id }, req.body, (err, data) =>{
                 res.json({
                     msg: 'update',
-                    data: data
+                    err,
+                    data
+                });
+            });
+            break;
+        case 'upload':
+            // 上传仓库
+            repertory.uploadCode({ _id }, req.body, (err, data) =>{
+                res.json({
+                    msg: 'upload',
+                    err,
+                    data
                 });
             });
             break;
         case 'download':
-        default:
-            repertory.download({ _id }, req.body, (err, data) =>{
+            // 下载仓库
+            repertory.downloadCode({ _id }, req.body, (err, data) =>{
                 res.json({
                     msg: 'download',
-                    data: data
+                    err,
+                    data
                 });
             })
+            break;
+        case 'status':
+
+            /**
+             * @desc 下载完成后的回调接口 对应更新状态
+             */ 
+            repertory.update({ _id }, req.query , (err, data) =>{
+                res.json({
+                    msg: 'status',
+                    err,
+                    data
+                });
+            })
+            break;
+        default:
+            res.json({
+                msg: 'noaction',
+                data: 'error'
+            });
 
     }
 }

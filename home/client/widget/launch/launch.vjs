@@ -11,7 +11,25 @@
             <i-col span="4"><Icon type="fork-repo"></Icon> 仓库地址: &nbsp; </i-col>
             <i-col span="20">{{ data.origin.path }}</i-col>
         </Row>
-        <i-button @click="submit" type="success" long>仓库下载</i-button>
+        <template v-if='data.origin.status == "downloading"'>
+             <Alert show-icon type="error" >
+                    <Icon type="load-a" slot="icon"  size=25 class="demo-spin-icon-load"></Icon>
+                    <Icon type="code-download"></Icon> 从 {{ data.origin.site.name }} 下载代码  
+                    <template slot="desc">正在下载{{ data.origin.path }} ...</template>
+            </Alert>
+        </template>
+        <template v-else-if='data.origin.status == "downloadafter" && data.target.status == "uploadafter" && false '>
+            <i-button @click="updateOriginCode" type="warning" long>更新仓库</i-button>
+        </template>
+        <template v-else-if='data.origin.status == "downloadafter"'>
+                <Alert type="success" show-icon>
+                    下载完成 
+                    <span slot="desc">下载成功</span>
+                </Alert>
+        </template>
+        <template v-else>
+            <i-button @click="downloadOriginCode" type="success" long>仓库下载</i-button>
+        </template>
 
         <h4><Icon type="map"></Icon> 迁移仓库</h4>
         <Row>
@@ -22,7 +40,26 @@
             <i-col span="4"><Icon type="fork-repo"></Icon> 仓库地址: &nbsp; </i-col>
             <i-col span="20">{{ data.target.path }}</i-col>
         </Row>
-        <i-button @click="submit" type="success" long>仓库上传</i-button>
+        <template v-if='data.origin.status == "downloadafter" && data.target.status== "uploading"'>
+             <Alert show-icon type="error" >
+                    <Icon type="load-a" slot="icon"  size=25 class="demo-spin-icon-load"></Icon>
+                    <Icon type="code-download"></Icon> 从 {{ data.origin.site.name }} 上传代码  
+                    <template slot="desc">正在上传{{ data.origin.path }} ...</template>
+            </Alert>
+        </template>
+        <template v-else-if='data.origin.status == "downloadafter" && data.target.status== "uploadafter"'>
+                <Alert type="success" show-icon>
+                    上传完成 
+                    <span slot="desc">上传成功</span>
+                </Alert>
+        </template>
+        <template v-else-if='data.origin.status == "downloadafter"'>
+                <i-button @click="uploadTargetCode" type="success" long>仓库上传</i-button>
+        </template>
+        <template v-else>
+                <i-button long disabled>仓库上传 disabled</i-button>
+        </template>
+
 
     </div>
 </template>
@@ -40,12 +77,42 @@
         margin: 10px auto 20px;
     }
 }
+ .demo-spin-icon-load{
+        animation: ani-demo-spin 1s linear infinite;
+    }
+    @keyframes ani-demo-spin {
+        from { transform: rotate(0deg);}
+        50%  { transform: rotate(180deg);}
+        to   { transform: rotate(360deg);}
+    }
+    .demo-spin-col{
+        height: 100px;
+        position: relative;
+        border: 1px solid #eee;
+    }
 </style>
 <script type='text/javascript'>
     import axios  from '../../static/lib/ajax/axios.js';
     export default{
         data(){
             return {
+                status :[
+                    'start',
+
+                    'downloadbefore', // 未下载
+                    'downloading',    // 下载中
+                    'downloadafter',  // 下载完成
+
+                    'uploadbefore',   // 未上传
+                    'uploading',      // 上传中
+                    'uploadafter',    // 上传完成
+
+                    'updatebefore',   // 未更新
+                    'updateing',      // 更新中
+                    'updateafter',    // 更新完成
+
+                    'end'
+                ],
                 data: {
                     origin: {
                         site: '',
@@ -55,14 +122,13 @@
                         site: '',
                         path: '',
                     }
-                }
+                },
             }
         },
         props: [],
         components: { },
         created(){
             let { id } = this.$route.params;
-            console.log(id);
             axios.get('/api/migrate',{
                 params:{
                     _id: id
@@ -74,6 +140,47 @@
             
         },
         methods:{
+            uploadTargetCode(){
+                this.data.target.status = 'uploading';
+
+                axios.put('/api/repertory/' + this.data.target._id +'/upload',{
+                    status: this.status[5],  // uploading
+                    origin: this.data.origin._id
+                }) .then((response)=>{
+                    this.data.target.status = 'uploadafter';
+                    console.log(response.data.data);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            downloadOriginCode(event, mk){
+                this.data.origin.status = 'downloading';
+
+                // 修改状态
+                // 下载代码
+                // 请求回调
+
+                axios.put('/api/repertory/' + this.data.origin._id +'/download',{
+                    status: this.status[2]  // downloading
+                }) .then((response)=>{
+                    this.data.origin.status = 'downloadafter';
+                    console.log(response.data.data);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+
+            },
+            updateOriginCode(){
+
+                axios.put('/api/repertory/' + this.data.target._id +'/update',{
+                    status: conf.status[2] 
+                }) .then((response)=>{
+                    console.log(response.data.data);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+                 
+            },
             submit(){
             
             }

@@ -1,0 +1,114 @@
+<template>
+    <div class='tmpl-icode'>
+        <navigator active='repertory'></navigator>
+        <h2><Icon type="lock-combination"></Icon> <a href='http://git.xiaodutv.com' target='_blank'>http://icode.baidu.com</a> 批量导入icode仓库</h2>
+        <h5>选择所属组</h5>
+        <Row v-for='rep in repos'>
+            <i-col span="1">
+               <Icon type="earth" v-if='rep.secret =="PUBLIC"'></Icon> 
+               <Icon type="locked" v-if='rep.secret =="PRIVATE"'></Icon>
+            </i-col>
+            <i-col span="5">
+                <Checkbox  v-model="rep.selected" :label="rep.id">
+                    <span>{{ rep.name }}</span>
+                </Checkbox>
+            </i-col>
+            <i-col span="14">{{ rep.fullName }}</i-col>
+            <i-col span="4">{{ rep.gmtCreate }}</i-col>
+
+        </Row>
+        <i-button @click=selected type="success" long>确认提交</i-button>
+    </div>
+</template>
+<style lang='less'>
+.tmpl-icode{
+    margin: 20px;
+    h2{
+        margin-top: 20px;
+    }
+    h5{
+    
+        margin: 15px 0 2px;
+    }
+    .ivu-row{
+        line-height: 25px;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 8px;
+        &:hover{
+            background: #f0f1f8;
+        }
+    }
+    .ivu-alert-error{
+        margin-top: 20px;
+        margin-bottom: 0px;
+    }
+    .ivu-btn-success{
+        margin-top: 20px;
+    }
+
+}
+</style>
+<script type='text/javascript'>
+    import axios  from '../../../static/lib/ajax/axios.js';
+    import sites  from '../../../static/lib/sites/sites.js';
+    let user = require('home:static/lib/user/user').default;
+
+
+    export default{
+        data(){
+            return {
+                repos: [],
+                social: [],
+                icodeid: '',
+                username: ''
+            }
+        },
+        props: [],
+        created(){
+            let icode = sites.get('icode');
+            this.username = user.name();
+            axios.get('/api/sites').then((res)=>{
+                res.data.data.map((item)=>{
+                    if(item.name == 'icode' && item.alias == 'icode'){
+                        this.icodeid = item._id;
+                    }
+                })
+            });
+
+            axios.get('/api/repertory').then((res)=>{
+
+                    let repertory = [];
+                    res.data.data.forEach(function(item, index, ay){
+                        repertory.push(item.localpath);
+                    });
+
+                    axios.post('/api/icode/projects',{
+                        COOKIE: icode.cookie
+                    }).then((res)=>{
+                        this.repos = res.data.data.data.filter(function(item){
+                            return 0 > repertory.indexOf(item.fullName);
+                        })
+                    });
+            })
+        },
+        components: { },
+        methods:{
+            selected(){
+                let repos = this.repos.filter((item) => {
+                    item.site_id = this.icodeid
+                    return item.selected;
+                });
+                
+                repos.map((item)=>{
+                    axios.post('/api/repertory',{
+                       localpath: item.fullName ,
+                       path: "ssh://${username}@icode.baidu.com:8235" + item.fullName,
+                       site: this.icodeid,
+                       username: this.username
+                    })
+                })
+
+            }
+        }
+    }
+</script>

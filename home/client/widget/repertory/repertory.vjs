@@ -23,9 +23,6 @@
     // import user  from '../../static/lib/user/user.js';
     let user = require('home:static/lib/user/user').default;
 
-
-
-
     export default{
         components: { 
             addrepertory, repertorylist

@@ -9,7 +9,10 @@
         <i-select v-model="site">
             <i-option v-for="item in sites" :value="item._id" :key="item">{{ item.name }}: {{item.path}} {{item.describe}}</i-option>
         </i-select>
-        <h5><Icon type="social-github"></Icon> 输入仓库路径</h5>
+        <h5><Icon type="social-github"></Icon> 输入仓库路径 
+        <a href='#/repertory/xiaodu' v-show="sitename == 'xiaodu'">直接添加仓库</a>
+        <a href='#/repertory/icode' v-show="sitename == 'icode'">批量导入仓库</a>
+        </h5>
         <i-input v-model="path" placeholder="http://git.xiaodutv.com/namespace/repertory.git" ></i-input>
         <h5><Icon type="link"></Icon> 本地存放地址</h5>
         <i-input v-model="localpath" placeholder="请输入..."></i-input>
@@ -47,10 +50,11 @@
                         label: '小度互娱代码平台'
                     }
                 ],
+                sitename: '',
                 site: '',
                 path: '',
                 localpath: '', 
-                error: null
+                error: null,
             }
         },
         props: ['username'],
@@ -96,6 +100,12 @@
                 if(!this.localpath){
                     this.localpath = this.path.split('/').slice(3).join('/');
                 }
+            },
+            site(nval, oval){
+                let siteName = this.sites.filter(function(item){
+                    return item._id == nval;
+                });
+                this.sitename = siteName[0]['name'];
             }
         }
     }

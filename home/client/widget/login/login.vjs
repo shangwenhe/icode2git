@@ -10,6 +10,8 @@
                 :title="modal.title"
                 :success="modal.success"
                 :status="modal.status"
+                :sitename="modal.sitename"
+                :cookie="modal.cookie"
                 :logintype="modal.logintype"
                 :_id="modal._id"
                 ></innermodal>
@@ -62,6 +64,7 @@
                              username: '',
                              password: '',
                              success: '登录' + value.name,
+                             sitename: value.name,
                           }, value, author && author[value._id]  )
                         ) 
                   });

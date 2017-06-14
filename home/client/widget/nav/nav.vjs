@@ -58,11 +58,6 @@
                         name: 'migrate',
                         icon: 'shuffle',
                     },
-                    {
-                        path: '/launch',
-                        name: 'launch',
-                        icon: 'android-upload',
-                    },
                 ],
                 active: 1
             }

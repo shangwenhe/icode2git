@@ -1,26 +1,29 @@
 /**
- * @file: use.js
+ * @file: sites.js
  * @author: shangwenhe@itv.baidu.com
- * @date: 2017-06-09
+ * @date: 2017-06-14
  * @description: this is a <js> file
  */
 /* eslint-disable */
-export default {
-   name(){
+let sites = null;
+function get(name){
+        if(sites){
+           return sites[name];
+        } 
+        sites = {};
         let author = window.localStorage.getItem('author');
-        let username = 'unknown';
         if(!author){
             window.location.hash= '#/login';
         }
         author = JSON.parse(author);
         for( let au  in author){ 
-            if(author[au]['title'].indexOf('xiaodu') > -1){
-                username = author[au]['username'];
-                break; 
-            }
+            sites[author[au]['sitename']] = author[au];
         }
-        return username;
-   
-   } 
-};
+
+        return  sites[name];
+  
+  }  
+export default {
+    get
+}
 /* eslint-enable */

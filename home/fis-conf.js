@@ -28,6 +28,9 @@ fis.match('lib/**.js', {
 fis.match('lib/user/**.js', {
     parser: fis.plugin('typescript')
 });
+fis.match('lib/sites/**.js', {
+    parser: fis.plugin('typescript')
+});
 fis.match('client/router.js', {
     parser: fis.plugin('typescript'),
     isMod: true,

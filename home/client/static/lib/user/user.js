@@ -14,13 +14,14 @@ export default {
         }
         author = JSON.parse(author);
         for( let au  in author){ 
-            if(author[au]['title'].indexOf('xiaodu') > -1){
+            if(author[au]['sitename'] == 'xiaodu'){
                 username = author[au]['username'];
                 break; 
             }
         }
         return username;
    
-   } 
+   }
+
 };
 /* eslint-enable */

@@ -30,4 +30,10 @@ module.exports = function(router){
     router.put('/api/sites/:_id', router.action('api/sites'));
 
     router.delete('/api/migrate/:_id', router.action('api/migrate'));
+
+    router.get('/api/gitlab/:uncouple', router.action('api/gitlab'));
+    router.post('/api/gitlab/:uncouple', router.action('api/gitlab'));
+
+    router.post('/api/icode/projects', router.action('api/icode').projects);
+
 };

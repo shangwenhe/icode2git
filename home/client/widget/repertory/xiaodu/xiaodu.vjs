@@ -1,0 +1,170 @@
+<template>
+    <div class='tmpl-xiaodu'>
+        <navigator active='repertory'></navigator>
+        <h2><Icon type="lock-combination"></Icon> <a href='http://git.xiaodutv.com' target='_blank'>http://git.xiaodutv.com</a> 添加仓库</h2>
+        <h5>选择所属组</h5>
+        <i-select v-model="namespace_id">
+            <i-option v-for="item in groups" :value="item.id" :key="item">组名:{{ item.name }} 路径:{{item.path}} 描述:{{item.description}}</i-option>
+        </i-select>
+        <h5>仓库名</h5>
+        <i-input v-model="name" placeholder="repertory.git" ></i-input>
+        <h5>仓库路径</h5>
+        <i-input v-model="path" placeholder="" ></i-input>
+        <h5>仓库描述</h5>
+        <i-input v-model="description" type='textarea':rows="3" placeholder="请输入..."  ></i-input>
+        <h5>仓库可见权限</h5>
+        <Radio-group v-model="visibility_level">
+            <Radio label="0">
+                <Icon type="ios-locked"></Icon>
+                <span> Private</span>
+            </Radio>
+            <Radio label="10">
+                <Icon type="contrast"></Icon>
+                <span> Internal</span>
+            </Radio>
+            <Radio label="20">
+                <Icon type="earth"></Icon>
+                <span> Public</span>
+            </Radio>
+        </Radio-group>
+        <Alert v-show='error' type="error" show-icon>
+            错误提示文案
+            <span slot="desc">
+                {{error}}
+            </span>
+        </Alert> 
+        <Alert v-show='success' type="success" show-icon>
+            提交成功
+            <span slot="desc">
+                {{ success }}
+            </span>
+        </Alert> 
+
+        
+        <i-button @click=create type="success" v-show='status == "normal"' long>确认提交</i-button>
+        <i-button type="success" v-show='status == "posting"' long>提交中... </i-button>
+
+    </div>
+</template>
+<style lang='less'>
+.tmpl-xiaodu{
+    margin: 20px;
+    h2{
+        margin-top: 20px;
+    }
+    h5{
+    
+        margin: 15px 0 2px;
+    }
+    .ivu-alert-success,
+    .ivu-alert-error{
+        margin-top: 20px;
+        margin-bottom: 0px;
+    }
+    .ivu-btn-success{
+        margin-top: 20px;
+    }
+}
+</style>
+<script type='text/javascript'>
+    import axios  from '../../../static/lib/ajax/axios.js';
+    let user = require('home:static/lib/user/user').default
+    export default{
+        data(){
+            return {
+                namespace_id: '',
+                groups: [],
+                name: '',
+                path: '',
+                description: '',
+                visibility_level: 10,
+                error: false,
+                success: false,
+                status: 'normal',
+                xiaoduid: '',
+                username: ''
+            }
+        },
+        props: [],
+        created(){
+            //  取得git.xiaodutv.com上有的组
+            axios.get('/api/gitlab/groups').then((res)=>{
+                this.groups = res.data.data;
+            });
+            // 取得用户名
+            this.username = user.name();
+            console.log(this.username)
+
+            // 取得添加xiaoduId
+            axios.get('/api/sites').then((res)=>{
+                res.data.data.map((item)=>{
+                    if(item.name == 'xiaodu' && item.alias == 'xiaodu'){
+                        this.xiaoduid = item._id;
+                    }
+                })
+            });
+
+        },
+        methods:{
+            create(){
+                let {name, path, namespace_id, description, visibility_level, username} = this;
+                if(!namespace_id){
+                    this.error = '请添加所属组';
+                    return;
+                }
+                if(!name){
+                    this.error = '请添加仓库名';
+                    return;
+                }
+                if(!path){
+                    this.error = '请添加仓库路径';
+                    return;
+                }
+                this.error = false;
+                let project = {
+                    name,
+                    path,
+                    namespace_id,
+                    description,
+                    visibility_level,
+                    username,
+                    "public": visibility_level ==20 ? true :false ,
+                };
+                this.name = '';
+                this.path = '';
+                this.description = '';
+                this.status = 'posting';
+
+                axios.post('/api/gitlab/group', project).then((res)=>{
+                    let item = res.data.data;
+                    console.log(res);
+                    // 如果存在的message说明出错了有重名的
+                    if(item.message){
+                        this.error = name +':'+ item.message.name[0];
+                        return; 
+                    }
+                    axios.post('/api/repertory',{
+                       localpath: path ,
+                       path: item.web_url,
+                       site: this.xiaoduid,
+                       username
+                    }).then((res)=>{
+                        this.status = 'normal';
+                        this.success = '创建成功：'+ item.web_url;
+                    })
+                })
+            }
+        },
+        watch:{
+            name(nval, oval){
+                if(this.path == '' || oval==this.path){
+                    this.path = nval;
+                }
+            },
+            path(nval, oval){
+               this.path = nval.replace(/[\/\\]/g,'') 
+            }
+        },
+        components: { }
+    }
+</script>

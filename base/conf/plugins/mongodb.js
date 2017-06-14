@@ -5,7 +5,7 @@
 
 var dev_config = {
     master: {
-        uri: 'mongodb://10.143.149.41:8034/newmis',
+        uri: 'mongodb://10.143.149.41:8034/migrate',
         options: {
 
         }
@@ -14,7 +14,7 @@ var dev_config = {
 
 var product_config = {
     master: {
-        uri: 'mongodb://10.143.149.41:8034/newmis',
+        uri: 'mongodb://10.143.149.41:8034/migrate',
         options: {
 
         }

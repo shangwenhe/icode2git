@@ -57,16 +57,8 @@
 }
 
 @media (max-width: 800px) {
-.migrate{
-    .ivu-col-span-11,
-    .ivu-col-span-2{
-        float: none;
-        width: 100%;
+    .migrate{
     }
-    .ivu-col-span-2{
-        padding-top: 0px;
-    }
-}
 }
 </style>
 <script>

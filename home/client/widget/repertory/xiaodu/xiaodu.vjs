@@ -145,7 +145,7 @@
                     }
                     axios.post('/api/repertory',{
                        localpath: path ,
-                       path: item.web_url,
+                       path: item.http_url_to_repo,
                        site: this.xiaoduid,
                        username
                     }).then((res)=>{

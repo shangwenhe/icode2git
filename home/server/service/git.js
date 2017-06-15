@@ -141,7 +141,7 @@ class Git {
 
                 let remote = this.replace({
                     origin: repertory.site.name,
-                    path: repertory.path + ( /\.git$/.test(repertory.path)? '': '.git')
+                    path: repertory.path
                 }, "git remote add ${origin} ${path}");
                 exec(workDir + remote, function(err, stout) {
                     if (err && err.code == 128) {
@@ -168,7 +168,23 @@ class Git {
                 }, callback)
             }
 
-        ], callback)
+        ], function(err, result){
+            
+            if(err){
+                callback(err, result);
+                return; 
+            }
+            curl.setStatus(repertory._id, 'uploadafter', function(err) {
+                callback(err, {
+                    path: repertory.localpath
+                })
+            });
+
+            
+
+        
+        })
+
     }
 }
 // curl -i -X PUT  127.0.0.1:8085/api/repertory/:id/:status

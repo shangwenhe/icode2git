@@ -122,10 +122,9 @@ class serviceRepertory extends Repertory {
     uploadCode(id, body, callback) {
         async.waterfall([
             (callback) => {
-                // super.update(id, {
-                //     status: body.status
-                // }, callback);
-                callback(null, 123)
+                super.update(id, {
+                    status: body.status
+                }, callback);
             }, (result, callback) => {
                 // 取得迁移仓库的详细信息
                 super.list({

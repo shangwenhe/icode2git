@@ -55,7 +55,6 @@ class Git {
      * @param {function} callback 回调函数
      */
     cloneBySsh(repertory, callback) {
-
         let cmd = this.replace({
             path: this.replace({
                 username: repertory.local[repertory.site_name].username
@@ -179,9 +178,6 @@ class Git {
                     path: repertory.localpath
                 })
             });
-
-            
-
         
         })
 

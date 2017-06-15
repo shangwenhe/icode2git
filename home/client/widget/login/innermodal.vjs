@@ -7,13 +7,9 @@
                <template v-if="!status">
                    <Alert v-if='error' type="error"  show-icon>{{ error }}</Alert>
                    <i-input v-on:on-blur="usernameblur(username)" type='text' v-model="username" placeholder="请输入用户名..."></i-input> 
-                   <template v-if="logintype == 'username'">
-                       <i-input type='password' v-model="password" placeholder="请输入密码..."></i-input> 
-                   </template>
-                   <template v-else>
-                       <i-input v-model="password" type="textarea" :autosize="{minRows:
-                       3,maxRows: 5}" placeholder="请粘贴形如这样的格式的ssh-rsa公钥：机器输入请勿更改...  "></i-input>
-                   </template>
+
+                   <i-input v-model="password" type="textarea" :autosize="{minRows:
+                   3,maxRows: 5}" placeholder="请粘贴形如这样的格式的ssh-rsa公钥：机器输入请勿更改..."></i-input>
 
                    <i-input v-model="cookie" type="textarea" :autosize="{minRows:
                    3,maxRows: 5}" placeholder="icode批量下载时使用...  "></i-input>
@@ -21,7 +17,7 @@
                </template>
                <template v-else>
                     <div class='ivu-input-wrapper'>
-                        用户名: {{ username }}  密码: {{ password.replace(/./g,'*') }}
+                        用户名: {{ username }}  密码: {{ password.replace(/./g,'*').substring(0,10) }}
                     </div>
                    <i-button type="ghost" @click="edit">重置登录帐号</i-button>
                </template>

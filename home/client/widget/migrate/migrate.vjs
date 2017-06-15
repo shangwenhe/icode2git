@@ -33,6 +33,7 @@
         </Row>
         <h4><Icon type="chatboxes"></Icon> 迁移备注</h4>
         <i-input v-model="mark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
+
         <i-button @click="submit" type="success" long>确认迁移仓库对应关系</i-button>
 
         <migrate-list :list=list></migrate-list>
@@ -129,7 +130,18 @@
                 axios.post('/api/migrate',{
                     origin, target, mark, username
                 }) .then((response)=>{
-                    console.log(response.data.data);
+
+                    this.migrate = {
+                        origin:{
+                            path: '',
+                            site: ''
+                        },
+                        target:{
+                            path: '',
+                            site: ''
+                        }
+                    };
+                    
                 }).catch(function (error) {
                     console.log(error);
                 });

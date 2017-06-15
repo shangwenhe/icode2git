@@ -75,10 +75,10 @@
                         value: 'ssh',
                         label: 'ssh本机验证'
                     },
-                    {
-                        value: 'username',
-                        label: '用户名密码'
-                    }
+                    // {
+                    //     value: 'username',
+                    //     label: '用户名密码'
+                    // }
                 ],
                 downloadcmd: '',
                 uploadcmd: '',

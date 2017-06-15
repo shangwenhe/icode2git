@@ -19,9 +19,17 @@ function post(req, res) {
 
 function get(req, res) {
     sites.list(req.query, (err, data) => {
-        res.json({
-            msg: 'get',
-            data: data
+        const fs = require('fs');
+        fs.readFile('/Users/shangwenhe/.ssh/id_rsa.pub',function(err, sshkey){
+            let SSHKEY = sshkey.toString()
+            res.json({
+                msg: 'get',
+                data: data.map((item) => {
+                    return Object.assign({}, item._doc, {
+                        password: SSHKEY 
+                    });
+                })
+            });
         });
     });
 }

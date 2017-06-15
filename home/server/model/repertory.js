@@ -29,6 +29,7 @@ class Repertory {
      * @desc 查询仓库列表
      */
     list(query, callback) {
+        query.is_delete = false;
         repertory.find(query, callback)
     }
 
@@ -36,7 +37,7 @@ class Repertory {
      * @desc 删除仓库
      */
     remove(param, callback) {
-        repertory.remove(param, callback)
+        repertory.update(param, {$set: {is_delete: true} }, callback);
     }
 
     /**

@@ -93,6 +93,7 @@
 </style>
 <script type='text/javascript'>
     import axios  from '../../static/lib/ajax/axios.js';
+    let sites = require('home:static/lib/sites/sites').default;
     export default{
         data(){
             return {
@@ -123,6 +124,7 @@
                         path: '',
                     }
                 },
+                username: {}
             }
         },
         props: [],
@@ -136,8 +138,8 @@
             }).then((ret)=>{
                 this.data = ret.data.data[0];
                 console.log(this.data)
-            })
-            
+            });
+            this.username = sites.getAll();
         },
         methods:{
             uploadTargetCode(){
@@ -161,7 +163,8 @@
                 // 请求回调
 
                 axios.put('/api/repertory/' + this.data.origin._id +'/download',{
-                    status: this.status[2]  // downloading
+                    status: this.status[2],  // downloading
+                    username: this.username
                 }) .then((response)=>{
                     this.data.origin.status = 'downloadafter';
                     console.log(response.data.data);

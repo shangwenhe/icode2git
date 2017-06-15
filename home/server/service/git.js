@@ -57,7 +57,9 @@ class Git {
     cloneBySsh(repertory, callback) {
 
         let cmd = this.replace({
-            path: repertory.path
+            path: this.replace({
+                username: repertory.local[repertory.site_name].username
+            }, repertory.path)
         }, repertory.site.downloadcmd);
 
         exec([cmd, REPPATH + repertory.localpath].join(' '), function(err, stdout, stderr) {
@@ -87,27 +89,83 @@ class Git {
     pushOrigin(repertory, callback) {
 
         // 切换目录
-        let workDir = ['cd', REPPATH + repertory.originPath,';'].join(' ')
+        let workDir = ['cd', REPPATH + repertory.originPath, ';'].join(' ')
         async.waterfall([
-                
-            // git remote add xiaodtv http://git.xiaodutv.com/migrate/node-proxy.git 
+
+            // 下载所有分支
             (callback) => {
+                let cmd = [
+                    'git branch -ra',
+                    'grep \'^\\s*remotes\\\/origin\'',
+                    'egrep --invert-match \'\(\:\?HEAD\)\''
+                ];
+                exec(workDir + cmd.join(' | '), (err, result, mk) => {
+                    async.map(result.split(/\n/).filter(item => item), (item, callback) => {
+                        let path = item.replace(/\s/g, '').split('/');
+                        let cmd = [
+                            'git',
+                            'branch',
+                            this.replace({
+                                branch: path[2],
+                                remoteBranch: path.join('/')
+                            }, '--track ${branch}  ${remoteBranch}')
+                        ];
+                        exec(workDir + cmd.join(' '), function(err, output, stdout) {
+                            if (err && err.code == 128) {
+                                callback(null, {
+                                    msg: 'ok',
+                                    branch: path[2], 
+                                    data: {
+                                        cmd: err.cmd,
+                                        info: stdout
+                                    }
+                                })
+                                return;
+                            }
+                            callback(err, {
+                                    msg: 'ok',
+                                    branch: path[2], 
+                                    data: {
+                                        cmd: err && err.cmd || cmd.join(' '),
+                                        info: stdout
+                                    }
+                                });
+                        })
+                    }, callback);
+                })
+
+            },
+
+            // git remote add xiaodtv http://git.xiaodutv.com/migrate/node-proxy.git 
+            (result, callback) => {
+
                 let remote = this.replace({
                     origin: repertory.site.name,
-                    path: repertory.path
+                    path: repertory.path + ( /\.git$/.test(repertory.path)? '': '.git')
                 }, "git remote add ${origin} ${path}");
-                exec(workDir + remote, function(err, result){
-                   callback(err, result) 
+                exec(workDir + remote, function(err, stout) {
+                    if (err && err.code == 128) {
+                        callback(null, result);
+                        return;
+                    }
+                    callback(err, result)
                 });
             },
 
             // git push xiaodtuv master 
             (result, callback) => {
-                let push = this.replace({
-                    origin: repertory.site.name,
-                    branch: 'master'
-                }, "git push ${origin} ${branch}");
-                exec(workDir + push, callback);
+                async.map(result, (item, callback ) => {
+                
+                    let push = this.replace({
+                        origin: repertory.site.name,
+                        branch: item.branch
+                    }, "git push ${origin} ${branch}");
+
+                    console.log(push);
+                    // 下载所有分支
+                    exec(workDir + push, callback);
+                
+                }, callback)
             }
 
         ], callback)

@@ -6,6 +6,7 @@
  */
 /* eslint-disable */
 let sites = null;
+
 function get(name){
         if(sites){
            return sites[name];
@@ -23,7 +24,15 @@ function get(name){
         return  sites[name];
   
   }  
+function getAll(){
+        if(sites){
+           return sites[name];
+        }
+        get('xiaodu');
+        return sites;
+}
 export default {
-    get
+    get,
+    getAll
 }
 /* eslint-enable */

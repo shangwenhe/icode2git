@@ -21,6 +21,10 @@ let repertorySchema = new Schema({
     site: ObjectId,
     path: String,
     localpath: String,
+    is_delete: {
+        type: Boolean,
+        default: false
+    },
     migrate: {
         type: Boolean,
         default: false

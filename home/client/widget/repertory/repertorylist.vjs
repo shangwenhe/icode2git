@@ -2,7 +2,6 @@
     <div class='repertorylist'>
         <h2><Icon type="ios-folder"></Icon> 仓库目录</h2>
         <i-table :columns="columns" :data="data"></i-table>
-        <Page v-show='data.length>0' :total="data.length" show-sizer @on-change="pagechange" @on-page-size-change='pagesizechange'></Page>
     </div>
 </template>
 <style lang=less>
@@ -74,13 +73,11 @@
             remove(index){
                 let _id = this.data[index]['_id'];
                 // 删除数据
-                console.log('axios.delete(\'/api/repertory/'+  _id +'\')')
-                // axios.delete('/api/repertory/'+  _id).then( (response) => {
-                //     console.log(response.data.data);
-                //     this.$emit('addrep', response.data.data);
-                // }).catch(function (error) {
-                //     console.log(error);
-                // });
+                axios.delete('/api/repertory/'+  _id).then( (response) => {
+                    this.data.splice(index,1);
+                }).catch(function (error) {
+                    console.log(error);
+                });
 
             },
             pagechange(page){

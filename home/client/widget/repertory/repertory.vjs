@@ -42,7 +42,6 @@
         created(){
             // 如果没有设置username则让其跳到登录页面
             this.username = user.name();
-            console.log(this.username)
             if(!this.username){
                 window.location.href = '#/login';
             }
@@ -50,7 +49,10 @@
         mounted(){
             axios.get('/api/repertory')
             .then((response)=>{
-                this.list = response.data.data;
+                this.list = response.data.data.filter((item)=>{
+                    return item.username == this.username;
+                
+                })
             }).catch(function (error) {
                 console.log(error);
             });

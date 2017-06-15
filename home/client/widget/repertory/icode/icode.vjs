@@ -3,21 +3,33 @@
         <navigator active='repertory'></navigator>
         <h2><Icon type="lock-combination"></Icon> <a href='http://git.xiaodutv.com' target='_blank'>http://icode.baidu.com</a> 批量导入icode仓库</h2>
         <h5>选择所属组</h5>
-        <Row v-for='rep in repos'>
-            <i-col span="1">
-               <Icon type="earth" v-if='rep.secret =="PUBLIC"'></Icon> 
-               <Icon type="locked" v-if='rep.secret =="PRIVATE"'></Icon>
-            </i-col>
-            <i-col span="5">
-                <Checkbox  v-model="rep.selected" :label="rep.id">
-                    <span>{{ rep.name }}</span>
-                </Checkbox>
-            </i-col>
-            <i-col span="14">{{ rep.fullName }}</i-col>
-            <i-col span="4">{{ rep.gmtCreate }}</i-col>
-
+        <Row v-for='rep in repos' v-if='!rep.selected'>
+                <i-col span="1">
+                   <Icon type="earth" v-if='rep.secret =="PUBLIC"'></Icon> 
+                   <Icon type="locked" v-if='rep.secret =="PRIVATE"'></Icon>
+                </i-col>
+                <i-col span="5">
+                    <Checkbox  v-model="rep.selected" :label="rep.id">
+                        <span>{{ rep.name }}</span>
+                    </Checkbox>
+                </i-col>
+                <i-col span="14">{{ rep.fullName }}</i-col>
+                <i-col span="4">{{ rep.gmtCreate }}</i-col>
         </Row>
-        <i-button @click=selected type="success" long>确认提交</i-button>
+        <Alert v-show='error' type="error" show-icon>
+            错误提示文案
+            <span slot="desc">
+                {{error}}
+            </span>
+        </Alert> 
+        <Alert v-show='success' type="success" show-icon>
+            提交成功
+            <span slot="desc">
+                {{ success }}
+            </span>
+        </Alert> 
+        <i-button @click=selected type="success" v-if='status =="normal"' long>确认提交</i-button>
+        <i-button  type="success" v-if='status =="posting"' long>提交中...</i-button>
     </div>
 </template>
 <style lang='less'>
@@ -38,8 +50,9 @@
             background: #f0f1f8;
         }
     }
+    .ivu-alert-success,
     .ivu-alert-error{
-        margin-top: 20px;
+        margin-top: 10px;
         margin-bottom: 0px;
     }
     .ivu-btn-success{
@@ -60,7 +73,10 @@
                 repos: [],
                 social: [],
                 icodeid: '',
-                username: ''
+                username: '',
+                error: '',
+                success: '',
+                status: 'normal'
             }
         },
         props: [],
@@ -74,7 +90,6 @@
                     }
                 })
             });
-
             axios.get('/api/repertory').then((res)=>{
 
                     let repertory = [];
@@ -95,16 +110,23 @@
         methods:{
             selected(){
                 let repos = this.repos.filter((item) => {
-                    item.site_id = this.icodeid
+                    item.site_id = this.icodeid;
                     return item.selected;
                 });
-                
+                this.status = 'posting';
                 repos.map((item)=>{
                     axios.post('/api/repertory',{
                        localpath: item.fullName ,
-                       path: "ssh://${username}@icode.baidu.com:8235" + item.fullName,
+                       path: "ssh://${username}@icode.baidu.com:8235/" + item.fullName,
                        site: this.icodeid,
                        username: this.username
+                    }).then((res)=>{
+                        this.success = item.fullName; 
+                        this.status = 'posting';
+                        setTimeout(()=>{
+                            this.status = 'normal';
+                            this.success = false;
+                        },2000)
                     })
                 })
 

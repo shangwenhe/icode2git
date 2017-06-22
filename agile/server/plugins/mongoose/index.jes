@@ -1,0 +1,33 @@
+/**
+ * @file: index.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-22
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+let Mongoose = require('mongoose');
+Mongoose.Promise = require('bluebird');
+
+
+function mongoose(app, conf) {
+    console.log(conf)
+    let { uri, options} = conf;
+    Mongoose.connect(uri, options);
+    var conn = Mongoose.connection;
+    conn.on('error', function(err) {
+        yog.log.fatal({
+            stack: err,
+            errno: 601,
+            msg: 'connect mongo database error'
+        });
+    });
+    conn.once('open', function() {
+        console.log('database `%s` connection open', conf.uri);
+    });
+
+
+}
+export {
+   mongoose 
+}
+/* eslint-enable */

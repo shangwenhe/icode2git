@@ -1,0 +1,155 @@
+/**
+ * @file: schema.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-22
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+
+
+/**
+ * @desc  http://wiki.xiaodutv.com/pages/viewpage.action?pageId=12521044
+ */
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
+/**
+ * The following option keys are available:
+ * db      - passed to the connection db instance
+ * server  - passed to the connection server instance(s)
+ * replset - passed to the connection ReplSet instance
+ * user    - username for authentication (if not specified in uri)
+ * pass    - password for authentication (if not specified in uri)
+ * auth    - options for authentication
+ * mongos  - Boolean - if true, enables High Availability support for mongos
+ */
+
+
+let HOOKSCHEMA = {
+    object_kind: {
+        type: String
+    },
+    before: {
+        type: String
+    },
+    after: {
+        type: String
+    },
+    ref: {
+        type: String
+    },
+    checkout_sha: {
+        type: String
+    },
+    message: {
+        type: String,
+        default: null
+    },
+    user_id: {
+        type: Number
+    },
+    user_name: {
+        type: String
+    },
+    user_email: {
+        type: String
+    },
+    user_avatar: {
+        type: String
+    },
+    project_id: {
+        type: Number
+    },
+    project: {
+        name: {
+            type: String
+        },
+        description: {
+            type: String
+        },
+        web_url: {
+            type: String
+        },
+        avatar_url: {
+            type: String,
+            default: null
+        },
+        git_ssh_url: {
+            type: String
+        },
+        git_http_url: {
+            type: String
+        },
+        namespace: {
+            type: String
+        },
+        visibility_level: {
+            type: Number
+        },
+        path_with_namespace: {
+            type: String
+        },
+        default_branch: {
+            type: String
+        },
+        homepage: {
+            type: String
+        },
+        url: {
+            type: String
+        },
+        ssh_url: {
+            type: String
+        },
+        http_url: {
+            type: String
+        }
+    },
+    commits: {
+        type: Array
+    },
+    total_commits_count: {
+        type: Number
+    },
+    repository: {
+        name: {
+            type: String
+        },
+        url: {
+            type: String
+        },
+        description: {
+            type: String
+        },
+        homepage: {
+            type: String
+        },
+        git_http_url: {
+            type: String
+        },
+        git_ssh_url: {
+            type: String
+        },
+        visibility_level: {
+            type: Number
+        }
+    },
+    pristine: {
+        type: Buffer
+    }
+};
+
+let modelHookSchema = Schema(HOOKSCHEMA);
+try {
+    var hook = mongoose.model('hook', modelHookSchema);
+} catch (e) {
+    var hook = mongoose.model('hook');
+}
+
+export
+default {
+    hook
+};
+
+
+/* eslint-enable */

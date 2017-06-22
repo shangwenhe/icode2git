@@ -1,0 +1,16 @@
+{
+  "name": "agile",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "regenerator-runtime": "^0.10.5"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.24.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,23 @@
+/**
+ * @file: hook.jes
+ * @author: shangwenhe@itv.baidu.com
+ * @date: 2017-06-22
+ * @description: this is a <jes> file
+ */
+/* eslint-disable */
+import schema from './schema';
+let { hook } = schema;
+
+class ModelHook {
+    find(query, callback) {
+        hook.find({}, callback);
+    }
+    save(data, callback) {
+        let addhook = new hook(Object.assign({},data,{
+            pristine: JSON.stringify(data)
+        }));
+        addhook.save(callback);
+    }
+}
+export default ModelHook;
+/* eslint-enable */
